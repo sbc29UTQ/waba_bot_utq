@@ -1,0 +1,179 @@
+{
+  "name": "actualizar_memoria_utq_bot",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "session_id"
+            },
+            {
+              "name": "query"
+            }
+          ]
+        }
+      },
+      "id": "c055762a-8fe7-4141-a639-df2372f30060",
+      "typeVersion": 1.1,
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        -240,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.getzep.com/api/v2/sessions/{{ $json.session_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        64,
+        144
+      ],
+      "id": "39441686-7e8c-4994-bea4-46345b2b5bfc",
+      "name": "Existe la sesion",
+      "alwaysOutputData": false,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "ETJ8tJvsIgBDD8II",
+          "name": "UTQ-ConsultorNegocios-zep"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.getzep.com/api/v2/sessions/{{ $('When Executed by Another Workflow').item.json.session_id }}/memory",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={ \"messages\": [\n        {\n            \"content\": \"{{ $('When Executed by Another Workflow').item.json.query }}\",\n            \"role_type\": \"norole\"\n        } ] }",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        784,
+        128
+      ],
+      "id": "9df241f8-27aa-48b9-848b-ad70d82eb22b",
+      "name": "actualiza la memoria",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "ETJ8tJvsIgBDD8II",
+          "name": "UTQ-ConsultorNegocios-zep"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.getzep.com/api/v2/sessions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "session_id",
+              "value": "={{ $('When Executed by Another Workflow').item.json.session_id }}"
+            },
+            {
+              "name": "user_id",
+              "value": "={{ $('When Executed by Another Workflow').item.json.session_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        384,
+        256
+      ],
+      "id": "533efb49-11c8-4ef6-bfcf-dea1970951c7",
+      "name": "Crear nueva sesion",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "ETJ8tJvsIgBDD8II",
+          "name": "UTQ-ConsultorNegocios-zep"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Existe la sesion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Existe la sesion": {
+      "main": [
+        [
+          {
+            "node": "actualiza la memoria",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Crear nueva sesion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear nueva sesion": {
+      "main": [
+        [
+          {
+            "node": "actualiza la memoria",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ece221a8-0518-4d76-8908-b5513f1549fb",
+  "meta": {
+    "instanceId": "f0bf3f67b469dedf6371c9047442257628487df8067e67f55789033f277fe9e8"
+  },
+  "id": "AalpDwgFSUWlymkf",
+  "tags": [
+    {
+      "updatedAt": "2025-06-18T14:53:33.313Z",
+      "createdAt": "2025-06-18T14:53:33.313Z",
+      "id": "rCwhlqOOg0s3x1V8",
+      "name": "UTOPIQ"
+    },
+    {
+      "updatedAt": "2025-06-02T17:26:33.829Z",
+      "createdAt": "2025-06-02T17:26:33.829Z",
+      "id": "x8aSWVRyvn8ErXt8",
+      "name": "TEST"
+    }
+  ]
+}

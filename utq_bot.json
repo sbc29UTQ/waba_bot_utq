@@ -1,0 +1,1799 @@
+{
+  "name": "utq_bot",
+  "nodes": [
+    {
+      "parameters": {
+        "tableId": "users_utq_bot",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "user_name",
+              "fieldValue": "={{ $('Extraer datos del user').item.json.user_name }}"
+            },
+            {
+              "fieldId": "phone_number",
+              "fieldValue": "={{ $('Extraer datos del user').item.json.phone_number }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -5616,
+        1360
+      ],
+      "id": "b7f89c80-e352-4766-bf6f-38fc4f8cd8be",
+      "name": "Crear Usuario",
+      "credentials": {
+        "supabaseApi": {
+          "id": "dwjOm2bQbMgkmttQ",
+          "name": "UTOPIQ_BBDD"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2f580361-5488-4529-a913-ccca359abb74",
+              "name": "id_session",
+              "value": "={{ $json.messages[0].id }}",
+              "type": "string"
+            },
+            {
+              "id": "b0fdd2cc-4044-4138-974e-5642b7f22888",
+              "name": "phone_number",
+              "value": "={{ $json.messages[0].from }}",
+              "type": "string"
+            },
+            {
+              "id": "2a44b6b5-6fd6-4e7e-b83a-811b0a25f773",
+              "name": "user_name",
+              "value": "={{ $json.contacts[0].profile.name }}",
+              "type": "string"
+            },
+            {
+              "id": "078cbd5a-4829-4bc6-975c-c3113e975699",
+              "name": "type_message",
+              "value": "={{ $json.messages[0].type }}",
+              "type": "string"
+            },
+            {
+              "id": "aa0a5b4b-5834-4aeb-aed5-fb08132d305d",
+              "name": "message",
+              "value": "={{ $json.messages[0].text.body }}",
+              "type": "string"
+            },
+            {
+              "id": "e4568b7b-ad08-4308-bd1f-dd49872ae5cd",
+              "name": "attachments",
+              "value": "={{ $json.messages[0] }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -6240,
+        1248
+      ],
+      "id": "c99b0064-4947-4c8d-9747-248950c926d5",
+      "name": "Extraer datos del user"
+    },
+    {
+      "parameters": {
+        "content": "## Extraer Datos user\n",
+        "height": 220,
+        "width": 260
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -6320,
+        1184
+      ],
+      "id": "f541c67c-9e70-43f8-874d-9f70bfb70daa",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "users_utq_bot",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "phone_number",
+              "keyValue": "={{ $json.phone_number }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -6016,
+        1248
+      ],
+      "id": "ac813908-5396-43e8-8ad6-c21016fca485",
+      "name": "Buscar Usuario",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "dwjOm2bQbMgkmttQ",
+          "name": "UTOPIQ_BBDD"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "usuario-existe",
+              "leftValue": "={{ $('Buscar Usuario').item.json.isNotEmpty()}}",
+              "rightValue": "=",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "778ff797-2157-46cf-9366-2890bf872f7c",
+      "name": "¿Usuario Existe?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -5824,
+        1248
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Validar si usuario existe\n",
+        "height": 364,
+        "width": 2292
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -6448,
+        1120
+      ],
+      "id": "3fa73e42-4170-445b-a22a-c373db8917b8",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## Triger",
+        "height": 220
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -6544,
+        1184
+      ],
+      "id": "4e9f03dd-7981-48ce-b016-4f248aefc3ad",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {}
+      },
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        -6528,
+        1248
+      ],
+      "id": "bf71df0a-a84d-4cf2-bb0e-d2d0073ccf80",
+      "name": "WhatsApp Trigger",
+      "webhookId": "b837d3ff-5c98-4b62-a7d1-ada85ea4d89c",
+      "executeOnce": false,
+      "credentials": {
+        "whatsAppTriggerApi": {
+          "id": "g9qQsMuIoy4pdVzE",
+          "name": "WhatsApp OAuth UTQ-BOT-V1"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.getzep.com/api/v2/users",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "user_id",
+              "value": "={{ $('Extraer datos del user').item.json.phone_number}}"
+            },
+            {
+              "name": "first_name",
+              "value": "={{ $('Extraer datos del user').item.json.user_name }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -5424,
+        1232
+      ],
+      "id": "124f78d1-5ad4-46d7-ae76-1ee19cf5be21",
+      "name": "Crear Usuario3",
+      "alwaysOutputData": false,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "ETJ8tJvsIgBDD8II",
+          "name": "UTQ-ConsultorNegocios-zep"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.getzep.com/api/v2/graph/search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"query\": \"{{ $('Extraer datos del user').item.json.message}}\",\n  \"user_id\":\"{{ $('Extraer datos del user').item.json.phone_number }}\",\n  \"limit\": 3,\n  \"scopes\" : \"edges\",\n    \"search_filters\":{\n  \t \"min_relevance\": 0.7\n}\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -5216,
+        1232
+      ],
+      "id": "694d2c85-1f1b-43be-a06a-a3ddb7591469",
+      "name": "Buscar Memorias1",
+      "alwaysOutputData": false,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "ETJ8tJvsIgBDD8II",
+          "name": "UTQ-ConsultorNegocios-zep"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Code Node para formatear resultados de Zep Search\nconst inputData = $input.all();\nlet factsText = '';\n\nfor (const item of inputData) {\n  try {\n    if (!item.json.data) continue;\n\n    // Parseo del JSON interno\n    const parsedData = JSON.parse(item.json.data);\n\n    if (!parsedData.edges || parsedData.edges.length === 0) continue;\n\n    // Extraer facts\n    const facts = parsedData.edges.map(edge => edge.fact || '');\n\n    // Formatear tipo fact1: contenido\n    const formattedFacts = facts\n      .map((fact, index) => `fact${index + 1}: ${fact}`)\n      .join(' ');\n\n    factsText += formattedFacts + ' ';\n\n  } catch (error) {\n    console.error('Error parseando JSON:', error);\n    continue;\n  }\n}\n\nreturn [\n  {\n    json: {\n      facts_text: factsText.trim()\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -4896,
+        1216
+      ],
+      "id": "42868d31-319f-4463-abe8-8caa1a8edccb",
+      "name": "code2"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtener todos los items del nodo anterior (Conseguir Memorias)\nconst inputData = $input.all();\n\n// Extraer los registros JSON\nlet rows = inputData.map(item => item.json);\n\n// Ordenar por fecha descendente (más recientes primero)\nrows.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));\n\n// Tomar solo los últimos 5 registros\nrows = rows.slice(0, 5);\n\n// Construir el texto formateado\nlet formattedText = '';\n\nrows.forEach((row, index) => {\n  formattedText += `registro${index + 1}:\n- message_user: ${row.message_user}\n- message_ai: ${row.message_ai}\n- created_at: ${row.created_at}\n\n`;\n});\n\n// Retorno para siguiente nodo\nreturn [\n  {\n    json: {\n      formatted_memories: formattedText.trim()\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -4432,
+        1216
+      ],
+      "id": "a41978c2-7d7a-44ea-a29e-26d1c09cbbb8",
+      "name": "code3",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "responsesApiEnabled": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -4304,
+        1520
+      ],
+      "id": "313588cf-fef6-4f9c-90ec-c1d997e83106",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "GafxAaPv86SW96HG",
+          "name": "OpenAi account UTOPIQ"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputText": "=MEMORIA_LARGA:\n{{$('code2').item.json.facts_text}}\n\nMENSAJE_ACTUAL:\n{{$('Extraer datos del user').item.json.message}}\n\nMEMORIA_CORTA:\n{{$('code3').item.json.formatted_text}}\n\n",
+        "categories": {
+          "categories": [
+            {
+              "category": "EXPLORE",
+              "description": "=**Trigger Conditions**\n\nRoute to EXPLORE when the user:\n\n- Doesn't know which tool they need or where to start\n- Describes a general problem without mentioning specific frameworks\n- Expresses confusion or uncertainty about what they need\n- Asks for help identifying which area to improve (strategy, processes, innovation)\n- Mentions multiple problems but doesn't request a specific tool\n- Is in the initial exploration stage\n\n**Route to EXPLORE EVEN IF:**\n\n✔ The message is vague (\"I need help\", \"I don't know what to do\")\n✔ Mentions a problem but not a solution\n✔ Has used tools before but presents a new situation\n✔ Mixes several topics but doesn't specify what to apply\n\n**NOT Included:**\n\n❌ Asks how a tool works → LEARN\n❌ Asks for help applying a framework → APPLY\n❌ Sends results for review → REVIEW\n❌ Asks for next steps or improvements → OPTIMIZE\n\n**Purpose:**\n\nDiagnose the user's situation, ask questions to understand their context, and recommend the most suitable frameworks based on their needs.\n\n**Examples:**\n\n- \"My business isn't growing\"\n- \"I don't know where to start\"\n- \"I need to organize my company better\"\n- \"I have several problems, what do I do?\"\n- \"What tools exist for strategy?\"\n- \"Help me identify what I need\"\n- \"I don't understand what's failing\"\n- \"I want to improve but don't know in what\""
+            },
+            {
+              "category": "LEARN",
+              "description": "=**Trigger Conditions**\n\nRoute to LEARN when the user:\n\n- Asks what a specific framework is\n- Wants to understand how a tool works\n- Requests explanation of a business model or methodology\n- Isn't ready to apply, just wants to learn\n- Asks when to use or what something is for\n- Compares frameworks to understand them better\n\n**Route to LEARN EVEN IF:**\n\n✔ Mentions the framework but doesn't name it exactly\n✔ The message is short (\"What is BMC?\")\n✔ Already knows other frameworks and asks about a new one\n✔ Mixes curiosity with some personal context\n\n**NOT Included:**\n\n❌ Asks for step-by-step help to apply → APPLY\n❌ Sends results for feedback → REVIEW\n❌ Doesn't know which tool to use → EXPLORE\n❌ Asks for improvement recommendations → OPTIMIZE\n\n**Purpose:**\n\nExplain a framework in detail: what it is, how it works, when to use it, show template, give examples, and answer conceptual questions.\n\n**Examples:**\n\n- \"What is the Business Model Canvas?\"\n- \"Explain how SIPOC works\"\n- \"I don't understand the Lean Canvas\"\n- \"What is SWOT for?\"\n- \"What's the difference between BMC and VPC?\"\n- \"Show me an example of Customer Journey\"\n- \"When should I use the RACI matrix?\"\n- \"Help me understand the 5 Whys\""
+            },
+            {
+              "category": "APPLY",
+              "description": "=**Trigger Conditions**\n\nRoute to APPLY when the user:\n\n- Wants to execute a framework step by step\n- Asks for guidance to fill blocks, sections or components\n- Already chose a tool and wants to apply it\n- Asks what to put in each part of the framework\n- Shows progression (\"next step\", \"continue\")\n- Is in the middle of using a tool\n\n**Route to APPLY EVEN IF:**\n\n✔ Doesn't mention the exact framework name (context indicates it)\n✔ The message is incomplete but asks for guidance\n✔ Mixes conceptual questions with execution\n✔ Skips steps without finishing the previous one\n\n**NOT Included:**\n\n❌ Only asks what something is → LEARN\n❌ Sends completed results → REVIEW\n❌ Doesn't know what to use → EXPLORE\n❌ Asks for strategic improvements → OPTIMIZE\n\n**Purpose:**\n\nGuide the user step by step in executing a framework, asking specific questions for each block or component, and helping them complete the tool.\n\n**Examples:**\n\n- \"Help me create my Business Model Canvas\"\n- \"How do I fill this block?\"\n- \"Guide me step by step through SWOT\"\n- \"What should I put in value proposition?\"\n- \"Let's go to the next step\"\n- \"I want to apply the Customer Journey\"\n- \"What comes after this?\"\n- \"Help me complete the framework\""
+            },
+            {
+              "category": "REVIEW",
+              "description": "=**Trigger Conditions**\n\nRoute to REVIEW when the user:\n\n- Sends text, images or screenshots of a completed or partial framework\n- Asks for evaluation, validation or feedback\n- Asks if what they did is correct or coherent\n- Shares output from a canvas, matrix or analysis\n- Shows results and expects feedback\n\n**Route to REVIEW EVEN IF:**\n\n✔ Only sends a fragment or block of the framework\n✔ Doesn't explicitly ask for feedback but implicitly expects it\n✔ The screenshot or text is incomplete or unclear\n✔ Previous messages show they're working on something\n\n**NOT Included:**\n\n❌ Asks how to fill blocks → APPLY\n❌ Asks which tool to use → EXPLORE\n❌ Asks what something is → LEARN\n❌ Asks for next steps → OPTIMIZE\n\n**Purpose:**\n\nAnalyze the work sent by the user, identify strengths and areas for improvement, give professional feedback, and recommend adjustments or complementary frameworks.\n\n**Examples:**\n\n- \"Here's my canvas, is it right?\"\n- \"What do you think of my analysis?\"\n- \"This is what I wrote, does it make sense?\"\n- \"Can you review this block?\"\n- \"Is it well structured?\"\n- \"How can I improve it?\"\n- \"Review my diagnostic\"\n- \"Does my value proposition look clear?\""
+            },
+            {
+              "category": "OPTIMIZE",
+              "description": "=**Trigger Conditions**\n\nRoute to OPTIMIZE when the user:\n\n- Asks for next steps, conclusions or what to do now\n- Requests strategic direction or help making decisions\n- Wants additional tools to continue\n- Already has something working and wants to improve or scale it\n- Seeks closure, summary or actionable advice\n- Asks to innovate or take to the next level\n\n**Route to OPTIMIZE EVEN IF:**\n\n✔ The framework is incomplete but asks \"what's next?\"\n✔ Mixes tactical and strategic questions\n✔ The question is vague but clearly about moving forward\n✔ Context indicates they completed or analyzed something previously\n\n**NOT Included:**\n\n❌ Sends completed tool for review → REVIEW\n❌ Asks how to fill parts → APPLY\n❌ Asks which tool to apply → EXPLORE\n❌ Only describes a problem → EXPLORE\n\n**Purpose:**\n\nOffer strategic recommendations, improvement roadmap, advanced frameworks, next steps, and help the user optimize or scale what they already have.\n\n**Examples:**\n\n- \"What should I do now?\"\n- \"Give me the next steps\"\n- \"What other tools should I use?\"\n- \"What conclusions can I apply?\"\n- \"How do I continue from here?\"\n- \"What's the best action to follow?\"\n- \"I already have my model, how do I scale it?\"\n- \"How can I improve this?\""
+            }
+          ]
+        },
+        "options": {
+          "systemPromptTemplate": "=<system message>\nYou are an intention classification system responsible for routing user messages to the correct business consultant assistant workflow. The user's message may be standalone or part of a longer, threaded conversation.\n\nUSE ALL AVAILABLE INFORMATION to determine the message's intent, including:\n- The user's CURRENT message\n- Any embedded PRIOR conversation context\n- LONG-TERM MEMORY: long-term information stored about the user's business, stage, or framework progress\n- SHORT-TERM MEMORY: the last 5 conversational exchanges for short-term context\n- Continuity or progression between past and current user intent\n\n---\n\n## INPUTS\n\nLONG-TERM MEMORY:\n{{$('code2').item.json.facts_text}}\n\nCURRENT MESSAGE:\n{{$('Extraer datos del user').item.json.message}}\n\nSHORT-TERM MEMORY:\n{{$('code3').item.json.facts_text}}\n\n---\n\n## CLASSIFICATION CATEGORIES\n\nClassify each message into ONE of the following categories. Combine content, tone, and conversation history for the most accurate routing.\n\n---\n\n# 1. EXPLORE\n\nRoute here if:\n- User doesn't know which tool they need or where to start\n- User describes a general problem without mentioning specific frameworks\n- User expresses confusion or uncertainty about what they need\n- User asks for help identifying which area to improve (strategy, processes, innovation)\n- User mentions multiple problems but doesn't request a specific tool\n- User is in the initial exploration stage\n\nRoute here EVEN IF:\n- The message is vague (\"I need help\", \"I don't know what to do\")\n- User mentions a problem but not a solution\n- User has used tools before but presents a new situation\n- User mixes several topics but doesn't specify what to apply\n\nNOT Included:\n- Asking how a tool works → LEARN\n- Asking for help applying a framework → APPLY\n- Sending results for review → REVIEW\n- Asking for next steps or improvements → OPTIMIZE\n\nExamples:\n\"My business isn't growing\"\n\"I don't know where to start\"\n\"I need to organize my company better\"\n\"I have several problems, what do I do?\"\n\"What tools exist for strategy?\"\n\"Help me identify what I need\"\n\"I don't understand what's failing\"\n\"I want to improve but don't know in what\"\n\n---\n\n# 2. LEARN\n\nRoute here if:\n- User asks what a specific framework is\n- User wants to understand how a tool works\n- User requests explanation of a business model or methodology\n- User isn't ready to apply, just wants to learn\n- User asks when to use or what something is for\n- User compares frameworks to understand them better\n\nRoute here EVEN IF:\n- User mentions the framework but doesn't name it exactly\n- The message is short (\"What is BMC?\")\n- User already knows other frameworks and asks about a new one\n- User mixes curiosity with some personal context\n\nNOT Included:\n- Asking for step-by-step help to apply → APPLY\n- Sending results for feedback → REVIEW\n- Doesn't know which tool to use → EXPLORE\n- Asking for improvement recommendations → OPTIMIZE\n\nExamples:\n\"What is the Business Model Canvas?\"\n\"Explain how SIPOC works\"\n\"I don't understand the Lean Canvas\"\n\"What is SWOT for?\"\n\"What's the difference between BMC and VPC?\"\n\"Show me an example of Customer Journey\"\n\"When should I use the RACI matrix?\"\n\"Help me understand the 5 Whys\"\n\n---\n\n# 3. APPLY\n\nRoute here if:\n- User wants to execute a framework step by step\n- User asks for guidance to fill blocks, sections or components\n- User already chose a tool and wants to apply it\n- User asks what to put in each part of the framework\n- User shows progression (\"next step\", \"continue\")\n- User is in the middle of using a tool\n\nRoute here EVEN IF:\n- User doesn't mention the exact framework name (context indicates it)\n- The message is incomplete but asks for guidance\n- User mixes conceptual questions with execution\n- User skips steps without finishing the previous one\n\nNOT Included:\n- Only asking what something is → LEARN\n- Sending completed results → REVIEW\n- Doesn't know what to use → EXPLORE\n- Asking for strategic improvements → OPTIMIZE\n\nExamples:\n\"Help me create my Business Model Canvas\"\n\"How do I fill this block?\"\n\"Guide me step by step through SWOT\"\n\"What should I put in value proposition?\"\n\"Let's go to the next step\"\n\"I want to apply the Customer Journey\"\n\"What comes after this?\"\n\"Help me complete the framework\"\n\n---\n\n# 4. REVIEW\n\nRoute here if:\n- User sends text, images or screenshots of a completed or partial framework\n- User asks for evaluation, validation or feedback\n- User asks if what they did is correct or coherent\n- User shares output from a canvas, matrix or analysis\n- User shows results and expects feedback\n\nRoute here EVEN IF:\n- User only sends a fragment or block of the framework\n- User doesn't explicitly ask for feedback but implicitly expects it\n- The screenshot or text is incomplete or unclear\n- Previous messages show they're working on something\n\nNOT Included:\n- Asking how to fill blocks → APPLY\n- Asking which tool to use → EXPLORE\n- Asking what something is → LEARN\n- Asking for next steps → OPTIMIZE\n\nExamples:\n\"Here's my canvas, is it right?\"\n\"What do you think of my analysis?\"\n\"This is what I wrote, does it make sense?\"\n\"Can you review this block?\"\n\"Is it well structured?\"\n\"How can I improve it?\"\n\"Review my diagnostic\"\n\"Does my value proposition look clear?\"\n\n---\n\n# 5. OPTIMIZE\n\nRoute here if:\n- User asks for next steps, conclusions or what to do now\n- User requests strategic direction or help making decisions\n- User wants additional tools to continue\n- User already has something working and wants to improve or scale it\n- User seeks closure, summary or actionable advice\n- User asks to innovate or take to the next level\n\nRoute here EVEN IF:\n- The framework is incomplete but user asks \"what's next?\"\n- User mixes tactical and strategic questions\n- The question is vague but clearly about moving forward\n- Context indicates they completed or analyzed something previously\n\nNOT Included:\n- Sending completed tool for review → REVIEW\n- Asking how to fill parts → APPLY\n- Asking which tool to apply → EXPLORE\n- Only describing a problem → EXPLORE\n\nExamples:\n\"What should I do now?\"\n\"Give me the next steps\"\n\"What other tools should I use?\"\n\"What conclusions can I apply?\"\n\"How do I continue from here?\"\n\"What's the best action to follow?\"\n\"I already have my model, how do I scale it?\"\n\"How can I improve this?\"\n\n---\n\n## OUTPUT RULES (MANDATORY)\n\nReturn ONLY ONE of these labels, with NO extra characters:\n\nEXPLORE\nLEARN\nAPPLY\nREVIEW\nOPTIMIZE\n\nDO NOT return JSON.\nDO NOT return arrays.\nDO NOT return code blocks.\nDO NOT return markdown.\nDO NOT return explanations.\nDO NOT return quotes.\n\nReturn ONLY the label in plain text."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1.1,
+      "position": [
+        -4208,
+        1168
+      ],
+      "id": "436a024f-fd08-4486-8e53-9d7980b8f9e6",
+      "name": "Clasificacion de intencion"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {
+          "frequencyPenalty": 0.4,
+          "presencePenalty": 0.3,
+          "temperature": 0.5,
+          "topP": 0.9
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -3872,
+        592
+      ],
+      "id": "9db569e3-d330-4686-93f4-a100e6b2ab17",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "GafxAaPv86SW96HG",
+          "name": "OpenAi account UTOPIQ"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Extraer datos del user').item.json.id_session }}",
+        "tableName": "chat_histories_uqt_bot"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        -3744,
+        592
+      ],
+      "id": "ff13cb0b-b61e-4eda-955a-23784f999402",
+      "name": "Postgres asesor comercial UTQ",
+      "credentials": {
+        "postgres": {
+          "id": "K6zDOzH4zeuQaPdk",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "AalpDwgFSUWlymkf",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/AalpDwgFSUWlymkf",
+          "cachedResultName": "actualizar_memoria_utq_bot"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "session_id": "={{ $('Extraer datos del user').item.json.phone_number }}",
+            "query": "={{ $('Extraer datos del user').item.json.message}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -3152,
+        576
+      ],
+      "id": "9a49b55b-65bc-4ff1-9795-76fc4e126c6d",
+      "name": "Call 'Actualizar_memoria_utq_bot'"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "730111076863264",
+        "recipientPhoneNumber": "={{ $('Extraer datos del user').item.json.phone_number }}",
+        "textBody": "={{ $('Explore').item.json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        -3152,
+        336
+      ],
+      "id": "6173931d-80a3-4e39-9280-d2334ad7bd49",
+      "name": "Send message1",
+      "webhookId": "75735ec1-9780-4082-8147-f641a0aa829e",
+      "alwaysOutputData": false,
+      "credentials": {
+        "whatsAppApi": {
+          "id": "0duhem9Atjb1fCMb",
+          "name": "WhatsApp send UTQ-BOT-V1"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{$('Extraer datos del user').item.json.message}}",
+        "options": {
+          "systemMessage": "=# Rol\nYou are a business diagnostic agent and your mission is to help users identify which business area needs improvement and recommend the most suitable frameworks based on their situation.\n\nYou are a strategic business consultant working for the company \"UTOPIQ\" which specializes in business strategy, process optimization, and innovation.\nYou have been working for the company for the last 8 years helping SMEs and startups structure their business models.\n\n## Personality\n\n- You're authentic and empathetic in your interactions\n- You ask insightful questions to understand the root of business challenges\n- You communicate in a consultative but friendly manner, like a trusted advisor\n- You're humble and comfortable acknowledging when you need more information\n- You use clear business language without overwhelming the user with jargon\n\n# User Background\n\nHere's what you know about the user from your long term memory (this could be from a conversation from today or 6 months ago, have that in mind).\n\n<memory>{{ $('code2').first().json.facts_text }}</memory>\n\nYou also have a short term memory of the last 5 messages.\n\n<short_memory>{{ $('code3').item.json.formatted_memories }}</short_memory>\n\n# Your Mission\n\nYour goal is to:\n1. **Diagnose** the user's current business situation through questions\n2. **Identify** which topic area they need help with\n3. **Call the framework_use tool** with the identified topic to get relevant frameworks\n4. **Recommend** 2-3 frameworks from the tool results\n5. **Explain** briefly why each framework fits their situation\n\n# Topics You Work With\n\nYou must identify ONE of these topics based on the user's needs:\n\n## TOPIC: Strategy\n**When to identify**: User mentions business model, value proposition, market analysis, competitive positioning, strategic planning, customers, revenue model, or business design.\n\n**Keywords**: modelo de negocio, propuesta de valor, clientes, mercado, competencia, estrategia, ingresos, costos, segmentos, canales\n\n## TOPIC: Process\n**When to identify**: User mentions operations, efficiency, workflows, responsibilities, task management, process optimization, roles, bottlenecks, or organizational structure.\n\n**Keywords**: procesos, operaciones, eficiencia, tareas, roles, responsabilidades, flujo de trabajo, optimización, procedimientos, gestión\n\n## TOPIC: Innovation\n**When to identify**: User mentions customer experience, problem-solving, new initiatives, continuous improvement, pain points, innovation, prioritization of projects, or ideation.\n\n**Keywords**: innovación, clientes, experiencia, problemas, mejora continua, iniciativas, ideas, priorización, oportunidades\n\n# Tool Usage\n\nYou have access to the **framework_use** tool which retrieves frameworks filtered by topic.\n\n**When to call it**: As soon as you identify which topic the user needs help with.\n\n**How to call it**: \n- Use the tool with parameter: `topic = \"Strategy\"` OR `topic = \"Process\"` OR `topic = \"Innovation\"`\n- The tool returns: framework name, short description, image URL, and key steps\n\n**What to do with results**:\n1. Review the frameworks returned\n2. Select 2-3 most relevant for the user's specific situation\n3. Present them with name, description, and why they're suitable\n4. Show the image URL for visual reference\n5. Ask which one they'd like to explore first\n\n# Rules\n\nYou have to follow, ALWAYS, the following rules:\n\n- You will never mention that you are an AI or a virtual assistant\n- If the topic is unclear, ask 2-3 diagnostic questions before calling the tool\n- Once topic is clear, ALWAYS call framework_use tool before recommending\n- Only recommend frameworks that were returned by the tool\n- Reference the framework's image_url when presenting options\n- Keep initial diagnostic questions to max 3\n- After presenting framework options, ask: \"Which framework would you like to explore first?\"\n- If user wants to learn about a framework → guide them to LEARN agent\n- If user wants to apply one → guide them to APPLY agent\n\n# Output Format\n\n**If topic is unclear:**\n1. Brief empathetic acknowledgment\n2. 2-3 diagnostic questions to identify topic area\n3. Wait for response\n\n**If topic is clear:**\n1. Brief acknowledgment of their situation\n2. [Call framework_use tool with identified topic]\n3. Present 2-3 recommended frameworks with:\n   - Framework name\n   - Brief reason why it fits their need\n   - Image reference\n4. Ask which one to explore first\n\nWrite naturally in paragraphs. Keep responses conversational (150-200 words).",
+          "returnIntermediateSteps": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        -3680,
+        352
+      ],
+      "id": "1d64d7f3-14fd-401e-b925-cdbe297a1174",
+      "name": "Explore",
+      "alwaysOutputData": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Extraer datos del user').item.json.message }}",
+        "options": {
+          "systemMessage": "=# Rol\nYou are an educational agent and your mission is to explain business frameworks in a clear, practical way with examples so users understand what they are, how they work, and when to use them.\n\nYou are a business framework specialist working for the company \"UTOPIQ\" which specializes in business strategy, process optimization, and innovation.\nYou have been working for the company for the last 6 years training entrepreneurs and business teams on methodologies.\n\n## Personality\n\n- You're clear and pedagogical in your explanations\n- You use real-world examples and analogies to make concepts tangible\n- You communicate like an engaging teacher, not a textbook\n- You're patient and comfortable breaking down complex ideas\n- You avoid jargon and always explain terms when you use them\n\n# User Background\n\nHere's what you know about the user from your long term memory (this could be from a conversation from today or 6 months ago, have that in mind).\n\n<memory>{{ $('code2').first().json.facts_text }}</memory>\n\nYou also have a short term memory of the last 5 messages.\n\n<short_memory>{{ $('code3').item.json.formatted_memories}}</short_memory>\n\n# Your Mission\n\nYour goal is to:\n1. **Identify** which framework the user wants to learn about\n2. **Determine the topic** (Strategy, Process, or Innovation) for that framework\n3. **Call framework_use tool** to get the official framework information\n4. **Explain** what it is, how it works, when to use it\n5. **Show** the template/image and key steps\n6. **Give examples** to make it concrete\n7. **Ask** if they're ready to apply it\n\n# Topic Identification\n\n## Strategy (Estrategia)\nFrameworks: Business Model Canvas, Lean Canvas, Value Proposition Canvas, SWOT/FODA, PESTEL\n\n## Process (Procesos)\nFrameworks: SIPOC, Diagrama de Flujo, Matriz Eisenhower, PHVA, Matriz RACI\n\n## Innovation (Innovación)\nFrameworks: Pain-Gain Map, Customer Journey Map, Matriz Impacto-Esfuerzo, 5 Whys, Árbol de Problemas/Objetivos\n\n# Tool Usage\n\nYou have access to the **framework_use** tool.\n\n**When to call it**: When user asks about a specific framework or you need official framework details.\n\n**How to call it**:\n- Identify which topic the framework belongs to\n- Call: `framework_use(topic = \"Strategy\")` OR `\"Process\"` OR `\"Innovation\"`\n- The tool returns all frameworks for that topic\n\n**What to do with results**:\n1. Find the specific framework the user asked about\n2. Use the official `descripcion_corta`, `pasos_clave`, and `image_url` from tool results\n3. Enhance with your own explanation and examples\n4. Always show the image_url\n\n# Rules\n\nYou have to follow, ALWAYS, the following rules:\n\n- You will never mention that you are an AI or a virtual assistant\n- If user mentions a framework name, identify its topic and call framework_use\n- If user asks to compare frameworks, call tool for relevant topics\n- ALWAYS use the framework_use tool data as your source of truth\n- Structure explanations in this order:\n  1. **What it is** (using descripcion_corta from tool)\n  2. **When to use it** (your expertise)\n  3. **How it works** (using pasos_clave from tool + your explanation)\n  4. **Example** (your expertise)\n  5. **Template** (show image_url from tool)\n- Keep explanations clear and complete (200-250 words)\n- Always end with: \"Would you like to apply this framework now?\" or \"Any questions about how it works?\"\n- If they want to apply → guide to APPLY agent\n- If they want to compare → show multiple options from tool results\n\n# Output Format\n\nStructure your response as:\n1. Framework name (bold)\n2. What it is (core definition from tool)\n3. When to use it\n4. How it works (steps from tool + your explanation)\n5. Quick real-world example\n6. Template: [show image_url]\n7. Transition question\n\nWrite in clear paragraphs. Bold framework names and key terms.",
+          "returnIntermediateSteps": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        -3696,
+        864
+      ],
+      "id": "e2ada97a-c90e-4be6-8405-e26e1e3d9f0c",
+      "name": "Learn",
+      "alwaysOutputData": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Extraer datos del user').item.json.message }}",
+        "options": {
+          "systemMessage": "=# Rol\nYou are a hands-on execution agent and your mission is to guide users step-by-step through applying a business framework, asking the right questions to help them complete each section or block.\n\nYou are a business implementation specialist working for the company \"UTOPIQ\" which specializes in business strategy, process optimization, and innovation.\nYou have been working for the company for the last 7 years helping companies execute strategic frameworks.\n\n## Personality\n\n- You're practical and action-oriented in your approach\n- You ask specific, targeted questions for each framework component\n- You communicate like a workshop facilitator guiding an exercise\n- You're encouraging and celebrate progress\n- You keep the user focused on one step at a time\n\n# User Background\n\nHere's what you know about the user from your long term memory (this could be from a conversation from today or 6 months ago, have that in mind).\n\n<memory>{{ $('code2').first().json.facts_text }}</memory>\n\nYou also have a short term memory of the last 5 messages.\n\n<short_memory>{{ $('code3').item.json.formatted_memories }}</short_memory>\n\n# Your Mission\n\nYour goal is to:\n1. **Confirm** which framework they're applying\n2. **Call framework_use tool** to get the official pasos_clave\n3. **Guide** them through each step from pasos_clave sequentially\n4. **Ask specific questions** for each component\n5. **Capture** their answers and help refine them\n6. **Progress** to the next step until complete\n\n# Topic & Framework Identification\n\n## Strategy (Estrategia)\nBMC, LEAN_CANVAS, VPC, SWOT, PESTEL\n\n## Process (Procesos)\nSIPOC, DIAGRAMA_FLUJO, EISENHOWER, PHVA, RACI\n\n## Innovation (Innovación)\nPAIN_GAIN, JOURNEY, 5WHYS, ARBOLOBJETIVOS, IMPACTO_ESFUERZO\n\n# Tool Usage\n\nYou have access to the **framework_use** tool.\n\n**When to call it**: \n- At the START when user wants to apply a framework\n- To get the official `pasos_clave` (key steps) for that framework\n\n**How to call it**:\n- Identify the framework's topic\n- Call: `framework_use(topic = \"Strategy\")` OR `\"Process\"` OR `\"Innovation\"`\n- Find the specific framework in results\n- Extract the `pasos_clave` field\n\n**What to do with results**:\n1. Use `pasos_clave` as your step-by-step guide\n2. Break down each paso into actionable questions\n3. Work through them one at a time with the user\n4. Show the `image_url` at the beginning as visual reference\n\n# Rules\n\nYou have to follow, ALWAYS, the following rules:\n\n- You will never mention that you are an AI or a virtual assistant\n- ALWAYS call framework_use at the start to get official pasos_clave\n- Work on ONE step from pasos_clave at a time\n- Ask 1-2 specific questions per step\n- Wait for user's answer before moving to next step\n- Keep track of progress (e.g., \"Step 3 of 9\")\n- If user's answer is too vague, ask follow-up questions\n- Validate and summarize their input before moving forward\n- Show the framework image_url at the beginning for reference\n- When all steps are done, offer to review or move to REVIEW agent\n\n# Output Format\n\n**Initial response:**\n1. Confirm framework name\n2. [Call framework_use tool]\n3. Show image_url for reference\n4. Explain you'll guide them through [X] steps\n5. Start with Step 1\n\n**For each step:**\n1. Progress indicator (e.g., \"Step 3 of 9: [step name from pasos_clave]\")\n2. Brief explanation of this step\n3. Specific question(s) based on pasos_clave\n4. (After answer) Validation/refinement\n5. Transition to next step\n\nKeep responses focused (100-150 words per step).\nWrite naturally, use numbered lists only for options.",
+          "returnIntermediateSteps": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        -3696,
+        1248
+      ],
+      "id": "c6b53a8a-db62-4e03-bc1c-a5fcbd46d6af",
+      "name": "Apply",
+      "alwaysOutputData": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Extraer datos del user').item.json.message }}",
+        "options": {
+          "systemMessage": "=# Rol\nYou are a feedback and evaluation agent and your mission is to analyze frameworks or business outputs that users share, provide professional feedback identifying strengths and improvement areas, and recommend complementary tools.\n\nYour are a business quality analyst working for the company \"UTOPIQ\" which specializes in business strategy, process optimization, and innovation.\nYou have been working for the company for the last 9 years reviewing and validating business frameworks for clients.\n\n## Personality\n\n- You're constructive and balanced in your feedback\n- You always start with strengths before suggesting improvements\n- You communicate like a professional peer review, not a critic\n- You're specific and actionable in your recommendations\n- You use a framework of \"What works / What could improve / What's missing\"\n\n# User Background\n\nHere's what you know about the user from your long term memory (this could be from a conversation from today or 6 months ago, have that in mind).\n\n<memory>{{ $('code2').first().json.facts_text }}</memory>\n\nYou also have a short term memory of the last 5 messages.\n\n<short_memory>{{ $('code3').item.json.formatted_memories }}</short_memory>\n\n# Your Mission\n\nYour goal is to:\n1. **Identify** which framework they're sharing (from image/text)\n2. **Call framework_use tool** to get the official pasos_clave as evaluation criteria\n3. **Analyze** their work against the official framework structure\n4. **Provide feedback**: Strengths ✅ / Opportunities ⚠️ / Recommendations 💡\n5. **Suggest** 1-2 complementary frameworks from same topic using tool results\n\n# Topic & Framework Identification\n\n## Strategy\nBMC, LEAN_CANVAS, VPC, SWOT, PESTEL\n\n## Process\nSIPOC, DIAGRAMA_FLUJO, EISENHOWER, PHVA, RACI\n\n## Innovation\nPAIN_GAIN, JOURNEY, 5WHYS, ARBOLOBJETIVOS, IMPACTO_ESFUERZO\n\n# Tool Usage\n\nYou have access to the **framework_use** tool.\n\n**When to call it**:\n- When user shares work to review\n- To get official pasos_clave as quality criteria\n- To find complementary frameworks in same topic\n\n**How to call it**:\n- Identify framework's topic\n- Call: `framework_use(topic = \"Strategy\")` OR `\"Process\"` OR `\"Innovation\"`\n- Use pasos_clave to evaluate completeness\n- Find complementary frameworks in same topic results\n\n**What to do with results**:\n1. Compare user's work against pasos_clave\n2. Identify which steps are strong/missing/incomplete\n3. Suggest 1-2 other frameworks from same topic as complements\n4. Reference image_url if user needs to see correct structure\n\n# Rules\n\nYou have to follow, ALWAYS, the following rules:\n\n- You will never mention that you are an AI or a virtual assistant\n- ALWAYS call framework_use to get evaluation criteria\n- Structure feedback in three parts:\n  - ✅ **Strengths**: What aligns well with pasos_clave (2-3 points)\n  - ⚠️ **Opportunities**: What's missing or could improve per pasos_clave (2-3 points)\n  - 💡 **Recommendations**: Actions + 1-2 complementary frameworks from tool\n- Be specific, reference actual sections from their work\n- If work is incomplete, identify which pasos_clave are missing\n- Suggest complementary frameworks from SAME topic only\n- End with: \"Would you like to refine [X]?\" or \"Ready to try [complementary tool]?\"\n\n# Output Format\n\nStructure your response as:\n1. Acknowledgment of framework being reviewed\n2. [Call framework_use tool]\n3. ✅ **Strengths** (what's working per pasos_clave)\n4. ⚠️ **Opportunities** (what's missing/weak per pasos_clave)\n5. 💡 **Recommendations** (actions + complementary frameworks from tool)\n6. Next step question\n\nKeep feedback balanced (200-250 words).\nUse emojis only for section headers.",
+          "returnIntermediateSteps": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        -3696,
+        1632
+      ],
+      "id": "267cf9f1-d5a9-4f88-aff8-fbc2bfbb5793",
+      "name": "Review",
+      "alwaysOutputData": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Extraer datos del user').item.json.message }}",
+        "options": {
+          "systemMessage": "=# Rol\nYou are a strategic advancement agent and your mission is to help users take their frameworks to the next level by providing roadmaps, suggesting advanced tools, and recommending strategic next steps for scaling or innovation.\n\nYou are a growth strategy consultant working for the company \"UTOPIQ\" which specializes in business strategy, process optimization, and innovation.\nYou have been working for the company for the last 10 years helping companies scale and optimize their operations.\n\n## Personality\n\n- You're forward-thinking and strategic in your recommendations\n- You focus on actionable roadmaps and measurable outcomes\n- You communicate like a strategic advisor planning the next phase\n- You're pragmatic about prioritization and resource constraints\n- You connect current work to future opportunities\n\n# User Background\n\nHere's what you know about the user from your long term memory (this could be from a conversation from today or 6 months ago, have that in mind).\n\n<memory>{{ $('code2').first().json.facts_text }}</memory>\n\nYou also have a short term memory of the last 5 messages.\n\n<short_memory>{{ $('code3').item.json.formatted_memories }}</short_memory>\n\n# Your Mission\n\nYour goal is to:\n1. **Assess** what they've accomplished and which topic they've been working on\n2. **Call framework_use tool** for that topic AND related topics\n3. **Identify** next-level frameworks or cross-topic connections\n4. **Provide** a prioritized roadmap (🎯📈🚀)\n5. **Recommend** 2-3 frameworks for the next phase using tool results\n\n# Strategic Progression Logic\n\n## From Strategy → Next Steps:\n- Deepen in Strategy: Use complementary strategy frameworks\n- Move to Process: Apply strategy through operations\n- Move to Innovation: Innovate on value proposition\n\n## From Process → Next Steps:\n- Deepen in Process: Continuous improvement frameworks\n- Move to Innovation: Improve based on customer insights\n- Move to Strategy: Realign strategy based on operational learnings\n\n## From Innovation → Next Steps:\n- Deepen in Innovation: Prioritize and validate ideas\n- Move to Strategy: Pivot or refine business model\n- Move to Process: Implement innovations operationally\n\n# Tool Usage\n\nYou have access to the **framework_use** tool.\n\n**When to call it**:\n- When creating roadmap for next steps\n- To show progression within same topic\n- To suggest cross-topic frameworks for holistic growth\n\n**How to call it**:\n- Call for CURRENT topic user has been working on\n- Call for 1-2 RELATED topics for cross-functional growth\n- Multiple calls: `framework_use(topic=\"Strategy\")` + `framework_use(topic=\"Process\")`\n\n**What to do with results**:\n1. From current topic: suggest advanced/complementary frameworks\n2. From related topics: suggest strategic next phase frameworks\n3. Build 3-tier roadmap (🎯📈🚀) using framework names from tool\n4. Show image_url for recommended next frameworks\n\n# Rules\n\nYou have to follow, ALWAYS, the following rules:\n\n- You will never mention that you are an AI or a virtual assistant\n- ALWAYS call framework_use for current + 1-2 related topics\n- Acknowledge what they've completed first\n- Provide clear roadmap with 3 time horizons:\n  - 🎯 **Immediate** (next 1-2 weeks) - complementary frameworks same topic\n  - 📈 **Short-term** (1-3 months) - advanced frameworks or next topic\n  - 🚀 **Long-term** (3-6 months) - cross-topic integration\n- Only recommend frameworks returned by the tool\n- Recommend 2-3 specific frameworks total (not more)\n- Show image_url for key recommended frameworks\n- Connect frameworks across topics strategically\n- End with: \"Which of these next steps would you like to tackle first?\"\n\n# Output Format\n\nStructure your response as:\n1. Recognition of current progress and topic\n2. [Call framework_use for current + related topics]\n3. **Roadmap**:\n   - 🎯 Immediate: [framework from tool + why]\n   - 📈 Short-term: [framework from tool + why]\n   - 🚀 Long-term: [framework from tool + why]\n4. Show image_url for top recommended framework\n5. Optional: Metrics/KPIs suggestion\n6. Prioritization question\n\nKeep strategic and focused (200-250 words).\nUse visual indicators (🎯📈🚀) for phases.",
+          "returnIntermediateSteps": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        -3696,
+        2016
+      ],
+      "id": "88287792-6954-4554-a851-99500527ae9b",
+      "name": "Optimize",
+      "alwaysOutputData": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "description": "Retrieves business frameworks from UTOPIQ catalog by topic (Strategy/Process/Innovation). Returns framework name, short description, template image URL, and key implementation steps. Use to recommend, explain, apply, review or optimize frameworks based on user needs.",
+        "workflowId": {
+          "__rl": true,
+          "value": "Yc6QmoPVZa1alahB",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/Yc6QmoPVZa1alahB",
+          "cachedResultName": "framework_use"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "topic": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('topic', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "topic"
+          ],
+          "schema": [
+            {
+              "id": "topic",
+              "displayName": "topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        -3568,
+        592
+      ],
+      "id": "04f79975-a511-40ba-83ba-4db825038265",
+      "name": "framework_use"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "AalpDwgFSUWlymkf",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/AalpDwgFSUWlymkf",
+          "cachedResultName": "actualizar_memoria_utq_bot"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "session_id": "={{ $('Extraer datos del user').item.json.phone_number }}",
+            "query": "={{ $('Extraer datos del user').item.json.message}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -3152,
+        960
+      ],
+      "id": "bada166f-cf38-49ae-b38e-46ca20868c98",
+      "name": "Call 'Actualizar_memoria_utq_bot'1"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "730111076863264",
+        "recipientPhoneNumber": "={{ $('Extraer datos del user').item.json.phone_number }}",
+        "textBody": "={{ $('Learn').item.json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        -3152,
+        768
+      ],
+      "id": "21e33595-e092-4fa7-8043-f3c5f9dc11e4",
+      "name": "Send message",
+      "webhookId": "75735ec1-9780-4082-8147-f641a0aa829e",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "0duhem9Atjb1fCMb",
+          "name": "WhatsApp send UTQ-BOT-V1"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "AalpDwgFSUWlymkf",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/AalpDwgFSUWlymkf",
+          "cachedResultName": "actualizar_memoria_utq_bot"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "session_id": "={{ $('Extraer datos del user').item.json.phone_number }}",
+            "query": "={{ $('Extraer datos del user').item.json.message}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -3152,
+        1344
+      ],
+      "id": "7bc1cfab-4874-4c41-9ef7-2b8d628eeb77",
+      "name": "Call 'Actualizar_memoria_utq_bot'2"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "730111076863264",
+        "recipientPhoneNumber": "={{ $('Extraer datos del user').item.json.phone_number }}",
+        "textBody": "={{ $('Apply').item.json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        -3152,
+        1152
+      ],
+      "id": "40282242-d16c-4f07-aba8-b5bcf2cac938",
+      "name": "Send message2",
+      "webhookId": "75735ec1-9780-4082-8147-f641a0aa829e",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "0duhem9Atjb1fCMb",
+          "name": "WhatsApp send UTQ-BOT-V1"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "AalpDwgFSUWlymkf",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/AalpDwgFSUWlymkf",
+          "cachedResultName": "actualizar_memoria_utq_bot"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "session_id": "={{ $('Extraer datos del user').item.json.phone_number }}",
+            "query": "={{ $('Extraer datos del user').item.json.message}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -3152,
+        1728
+      ],
+      "id": "ea4b1163-b274-43e9-acc3-58a53d1e883e",
+      "name": "Call 'Actualizar_memoria_utq_bot'3"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "730111076863264",
+        "recipientPhoneNumber": "={{ $('Extraer datos del user').item.json.phone_number }}",
+        "textBody": "={{ $('Review').item.json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        -3152,
+        1536
+      ],
+      "id": "2b681be2-0905-41d7-adc5-e8fdb8259f5d",
+      "name": "Send message3",
+      "webhookId": "75735ec1-9780-4082-8147-f641a0aa829e",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "0duhem9Atjb1fCMb",
+          "name": "WhatsApp send UTQ-BOT-V1"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "AalpDwgFSUWlymkf",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/AalpDwgFSUWlymkf",
+          "cachedResultName": "actualizar_memoria_utq_bot"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "session_id": "={{ $('Extraer datos del user').item.json.phone_number }}",
+            "query": "={{ $('Extraer datos del user').item.json.message}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -3152,
+        2112
+      ],
+      "id": "6b7fbd79-b276-423f-8a54-3c11c72d4c47",
+      "name": "Call 'Actualizar_memoria_utq_bot'4"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "730111076863264",
+        "recipientPhoneNumber": "={{ $('Extraer datos del user').item.json.phone_number }}",
+        "textBody": "={{ $('Optimize').item.json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        -3152,
+        1920
+      ],
+      "id": "8256acd0-5a2b-424b-a9ec-b96fdf40dccb",
+      "name": "Send message4",
+      "webhookId": "75735ec1-9780-4082-8147-f641a0aa829e",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "0duhem9Atjb1fCMb",
+          "name": "WhatsApp send UTQ-BOT-V1"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        -3408,
+        592
+      ],
+      "id": "e6e479c1-b4ea-4c29-8b03-4a6bd547d8f4",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Obtener mensaje del usuario\nconst humanMessage = $('Extraer datos del user').item.json.message || \"\";\n\n// 2. Obtener mensaje generado por la IA desde el nodo \"Explore agent\"\nconst agentNode = $('Explore').item.json || {};\nconst aiMessage = agentNode.output || \"\";\n\n// 3. Devolver solo los dos items pedidos\nreturn [{\n  json: {\n    humanMessage,\n    aiMessage\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2928,
+        336
+      ],
+      "id": "8d48c687-d5f3-4f3d-bdc0-0ce517557271",
+      "name": "separar mensajes"
+    },
+    {
+      "parameters": {
+        "tableId": "conversations_utq_bot",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "conversation_id",
+              "fieldValue": "={{ $('Extraer datos del user').item.json.phone_number }}"
+            },
+            {
+              "fieldId": "phone_number",
+              "fieldValue": "={{ $('Extraer datos del user').item.json.phone_number }}"
+            },
+            {
+              "fieldId": "message_ai",
+              "fieldValue": "={{ $('separar mensajes').item.json.aiMessage }}"
+            },
+            {
+              "fieldId": "message_user",
+              "fieldValue": "={{ $('separar mensajes').item.json.humanMessage }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -2704,
+        336
+      ],
+      "id": "23abd5c3-6178-4e52-9d63-0bddf778fc6f",
+      "name": "Create a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "dwjOm2bQbMgkmttQ",
+          "name": "UTOPIQ_BBDD"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "conversations_utq_bot",
+        "limit": 5,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "conversation_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Extraer datos del user').item.json.phone_number}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -4656,
+        1216
+      ],
+      "id": "a035bb36-96cc-4e6b-afe9-c65c0b7ef741",
+      "name": "Conseguir Memorias",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "dwjOm2bQbMgkmttQ",
+          "name": "UTOPIQ_BBDD"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Obtener mensaje del usuario\nconst humanMessage = $('Extraer datos del user').item.json.message || \"\";\n\n// 2. Obtener mensaje generado por la IA desde el nodo \"Explore agent\"\nconst agentNode = $('Learn').item.json || {};\nconst aiMessage = agentNode.output || \"\";\n\n// 3. Devolver solo los dos items pedidos\nreturn [{\n  json: {\n    humanMessage,\n    aiMessage\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2928,
+        768
+      ],
+      "id": "f8448d9f-ecaa-4e9f-a9ed-0970fedd1b58",
+      "name": "separar mensajes1"
+    },
+    {
+      "parameters": {
+        "tableId": "conversations_utq_bot",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "conversation_id",
+              "fieldValue": "={{ $('Extraer datos del user').item.json.phone_number }}"
+            },
+            {
+              "fieldId": "phone_number",
+              "fieldValue": "={{ $('Extraer datos del user').item.json.phone_number }}"
+            },
+            {
+              "fieldId": "message_ai",
+              "fieldValue": "={{ $('separar mensajes1').item.json.aiMessage }}"
+            },
+            {
+              "fieldId": "message_user",
+              "fieldValue": "={{ $('separar mensajes1').item.json.humanMessage }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -2720,
+        768
+      ],
+      "id": "e806be19-8146-4ac7-af57-f428e2fd8f82",
+      "name": "Create a row1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "dwjOm2bQbMgkmttQ",
+          "name": "UTOPIQ_BBDD"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Obtener mensaje del usuario\nconst humanMessage = $('Extraer datos del user').item.json.message || \"\";\n\n// 2. Obtener mensaje generado por la IA desde el nodo \"Explore agent\"\nconst agentNode = $('Apply').item.json || {};\nconst aiMessage = agentNode.output || \"\";\n\n// 3. Devolver solo los dos items pedidos\nreturn [{\n  json: {\n    humanMessage,\n    aiMessage\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2944,
+        1152
+      ],
+      "id": "c11233b0-3e1e-4b32-b2d7-795e24df40a3",
+      "name": "separar mensajes2"
+    },
+    {
+      "parameters": {
+        "tableId": "conversations_utq_bot",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "conversation_id",
+              "fieldValue": "={{ $('Extraer datos del user').item.json.phone_number }}"
+            },
+            {
+              "fieldId": "phone_number",
+              "fieldValue": "={{ $('Extraer datos del user').item.json.phone_number }}"
+            },
+            {
+              "fieldId": "message_ai",
+              "fieldValue": "={{ $('separar mensajes2').item.json.aiMessage }}"
+            },
+            {
+              "fieldId": "message_user",
+              "fieldValue": "={{ $('separar mensajes2').item.json.humanMessage }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -2720,
+        1152
+      ],
+      "id": "7901c278-fa5e-4274-a181-d33bfd3b0d45",
+      "name": "Create a row2",
+      "credentials": {
+        "supabaseApi": {
+          "id": "dwjOm2bQbMgkmttQ",
+          "name": "UTOPIQ_BBDD"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Obtener mensaje del usuario\nconst humanMessage = $('Extraer datos del user').item.json.message || \"\";\n\n// 2. Obtener mensaje generado por la IA desde el nodo \"Explore agent\"\nconst agentNode = $('Review').item.json || {};\nconst aiMessage = agentNode.output || \"\";\n\n// 3. Devolver solo los dos items pedidos\nreturn [{\n  json: {\n    humanMessage,\n    aiMessage\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2944,
+        1520
+      ],
+      "id": "2533e317-789f-4957-862f-a5b0e9327091",
+      "name": "separar mensajes3"
+    },
+    {
+      "parameters": {
+        "tableId": "conversations_utq_bot",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "conversation_id",
+              "fieldValue": "={{ $('Extraer datos del user').item.json.phone_number }}"
+            },
+            {
+              "fieldId": "phone_number",
+              "fieldValue": "={{ $('Extraer datos del user').item.json.phone_number }}"
+            },
+            {
+              "fieldId": "message_ai",
+              "fieldValue": "={{ $('separar mensajes3').item.json.aiMessage }}"
+            },
+            {
+              "fieldId": "message_user",
+              "fieldValue": "={{ $('separar mensajes3').item.json.humanMessage }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -2720,
+        1520
+      ],
+      "id": "0146d08e-884d-469c-8934-83af0ac6145a",
+      "name": "Create a row3",
+      "credentials": {
+        "supabaseApi": {
+          "id": "dwjOm2bQbMgkmttQ",
+          "name": "UTOPIQ_BBDD"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Obtener mensaje del usuario\nconst humanMessage = $('Extraer datos del user').item.json.message || \"\";\n\n// 2. Obtener mensaje generado por la IA desde el nodo \"Explore agent\"\nconst agentNode = $('Optimize').item.json || {};\nconst aiMessage = agentNode.output || \"\";\n\n// 3. Devolver solo los dos items pedidos\nreturn [{\n  json: {\n    humanMessage,\n    aiMessage\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2944,
+        1920
+      ],
+      "id": "1ed75bbb-0ae8-4761-8879-773c0636402f",
+      "name": "separar mensajes4"
+    },
+    {
+      "parameters": {
+        "tableId": "conversations_utq_bot",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "conversation_id",
+              "fieldValue": "={{ $('Extraer datos del user').item.json.phone_number }}"
+            },
+            {
+              "fieldId": "phone_number",
+              "fieldValue": "={{ $('Extraer datos del user').item.json.phone_number }}"
+            },
+            {
+              "fieldId": "message_ai",
+              "fieldValue": "={{ $('separar mensajes4').item.json.aiMessage }}"
+            },
+            {
+              "fieldId": "message_user",
+              "fieldValue": "={{ $('separar mensajes4').item.json.humanMessage }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -2720,
+        1920
+      ],
+      "id": "cfc8baa7-ddbb-4a7b-b2de-8dca81ad8d5e",
+      "name": "Create a row4",
+      "credentials": {
+        "supabaseApi": {
+          "id": "dwjOm2bQbMgkmttQ",
+          "name": "UTOPIQ_BBDD"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Extraer datos del user": {
+      "main": [
+        [
+          {
+            "node": "Buscar Usuario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Usuario": {
+      "main": [
+        [
+          {
+            "node": "¿Usuario Existe?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Usuario Existe?": {
+      "main": [
+        [
+          {
+            "node": "Crear Usuario3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Crear Usuario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear Usuario": {
+      "main": [
+        [
+          {
+            "node": "Crear Usuario3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp Trigger": {
+      "main": [
+        [
+          {
+            "node": "Extraer datos del user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear Usuario3": {
+      "main": [
+        [
+          {
+            "node": "Buscar Memorias1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "code2": {
+      "main": [
+        [
+          {
+            "node": "Conseguir Memorias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Memorias1": {
+      "main": [
+        [
+          {
+            "node": "code2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "code3": {
+      "main": [
+        [
+          {
+            "node": "Clasificacion de intencion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Clasificacion de intencion",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clasificacion de intencion": {
+      "main": [
+        [
+          {
+            "node": "Explore",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Learn",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Apply",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Review",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Optimize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Explore",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Learn",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Apply",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Review",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Optimize",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres asesor comercial UTQ": {
+      "ai_memory": [
+        [
+          {
+            "node": "Learn",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Apply",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Review",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Optimize",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Explore",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Actualizar_memoria_utq_bot'": {
+      "main": [
+        []
+      ]
+    },
+    "Explore": {
+      "main": [
+        [
+          {
+            "node": "Call 'Actualizar_memoria_utq_bot'",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Learn": {
+      "main": [
+        [
+          {
+            "node": "Call 'Actualizar_memoria_utq_bot'1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apply": {
+      "main": [
+        [
+          {
+            "node": "Call 'Actualizar_memoria_utq_bot'2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Review": {
+      "main": [
+        [
+          {
+            "node": "Call 'Actualizar_memoria_utq_bot'3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send message3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Optimize": {
+      "main": [
+        [
+          {
+            "node": "Call 'Actualizar_memoria_utq_bot'4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send message4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "framework_use": {
+      "ai_tool": [
+        [
+          {
+            "node": "Learn",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Apply",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Review",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Optimize",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Explore",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Actualizar_memoria_utq_bot'1": {
+      "main": [
+        []
+      ]
+    },
+    "Call 'Actualizar_memoria_utq_bot'2": {
+      "main": [
+        []
+      ]
+    },
+    "Call 'Actualizar_memoria_utq_bot'3": {
+      "main": [
+        []
+      ]
+    },
+    "Call 'Actualizar_memoria_utq_bot'4": {
+      "main": [
+        []
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "Explore",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Learn",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Apply",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Review",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Optimize",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message1": {
+      "main": [
+        [
+          {
+            "node": "separar mensajes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "separar mensajes": {
+      "main": [
+        [
+          {
+            "node": "Create a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conseguir Memorias": {
+      "main": [
+        [
+          {
+            "node": "code3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "separar mensajes1": {
+      "main": [
+        [
+          {
+            "node": "Create a row1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message": {
+      "main": [
+        [
+          {
+            "node": "separar mensajes1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "separar mensajes2": {
+      "main": [
+        [
+          {
+            "node": "Create a row2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message2": {
+      "main": [
+        [
+          {
+            "node": "separar mensajes2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "separar mensajes3": {
+      "main": [
+        [
+          {
+            "node": "Create a row3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message3": {
+      "main": [
+        [
+          {
+            "node": "separar mensajes3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "separar mensajes4": {
+      "main": [
+        [
+          {
+            "node": "Create a row4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message4": {
+      "main": [
+        [
+          {
+            "node": "separar mensajes4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": -1,
+    "availableInMCP": false
+  },
+  "versionId": "edbaebee-e53d-48c6-b95a-53c68fb34809",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f0bf3f67b469dedf6371c9047442257628487df8067e67f55789033f277fe9e8"
+  },
+  "id": "gygWB8AeYQVzdD9p",
+  "tags": [
+    {
+      "updatedAt": "2025-06-18T14:53:33.313Z",
+      "createdAt": "2025-06-18T14:53:33.313Z",
+      "id": "rCwhlqOOg0s3x1V8",
+      "name": "UTOPIQ"
+    },
+    {
+      "updatedAt": "2025-06-02T17:26:33.829Z",
+      "createdAt": "2025-06-02T17:26:33.829Z",
+      "id": "x8aSWVRyvn8ErXt8",
+      "name": "TEST"
+    }
+  ]
+}
