@@ -80,18 +80,8 @@
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
-        "bodyParameters": {
-          "parameters": [
-            {
-              "name": "session_id",
-              "value": "={{ $('When Executed by Another Workflow').item.json.session_id }}"
-            },
-            {
-              "name": "user_id",
-              "value": "={{ $('When Executed by Another Workflow').item.json.session_id }}"
-            }
-          ]
-        },
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"session_id\": \"{{ $('When Executed by Another Workflow').item.json.session_id }}\",\n  \"user_id\": \"{{ $('When Executed by Another Workflow').item.json.session_id }}\"\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
