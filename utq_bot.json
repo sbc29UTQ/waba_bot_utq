@@ -223,18 +223,8 @@
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
-        "bodyParameters": {
-          "parameters": [
-            {
-              "name": "user_id",
-              "value": "={{ $('Extraer datos del user').item.json.phone_number}}"
-            },
-            {
-              "name": "first_name",
-              "value": "={{ $('Extraer datos del user').item.json.user_name }}"
-            }
-          ]
-        },
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"user_id\": \"{{ $('Extraer datos del user').item.json.phone_number }}\",\n  \"first_name\": \"{{ $('Extraer datos del user').item.json.user_name }}\"\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
