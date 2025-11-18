@@ -1,0 +1,99 @@
+{
+  "name": "split_and_send_messages",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "workflow-trigger-001",
+      "name": "When called by another workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtener el mensaje y el número de teléfono del workflow que llama\nconst message = $input.item.json.message || '';\nconst phoneNumber = $input.item.json.phone_number || '';\nconst maxLength = 130;\n\n// Si el mensaje es menor o igual a 130 caracteres, enviar como un solo mensaje\nif (message.length <= maxLength) {\n  return [\n    {\n      json: {\n        phone_number: phoneNumber,\n        message_part: message,\n        part_number: 1,\n        total_parts: 1\n      }\n    }\n  ];\n}\n\n// Dividir el mensaje en partes de máximo 130 caracteres\n// Intentar dividir por párrafos o frases para mejor legibilidad\nconst chunks = [];\nlet remaining = message;\n\nwhile (remaining.length > 0) {\n  if (remaining.length <= maxLength) {\n    chunks.push(remaining);\n    break;\n  }\n  \n  // Intentar cortar en un punto natural (espacio, punto, coma)\n  let cutPoint = maxLength;\n  const searchText = remaining.substring(0, maxLength);\n  \n  // Buscar último espacio, punto o salto de línea\n  const lastNewline = searchText.lastIndexOf('\\n');\n  const lastPeriod = searchText.lastIndexOf('. ');\n  const lastSpace = searchText.lastIndexOf(' ');\n  \n  if (lastNewline > maxLength * 0.7) {\n    cutPoint = lastNewline + 1;\n  } else if (lastPeriod > maxLength * 0.7) {\n    cutPoint = lastPeriod + 2;\n  } else if (lastSpace > maxLength * 0.7) {\n    cutPoint = lastSpace + 1;\n  }\n  \n  chunks.push(remaining.substring(0, cutPoint).trim());\n  remaining = remaining.substring(cutPoint).trim();\n}\n\n// Limitar a máximo 3 partes como solicitado\nif (chunks.length > 3) {\n  // Combinar los chunks excedentes en el último\n  const extraChunks = chunks.slice(2);\n  chunks[2] = extraChunks.join(' ');\n  chunks.length = 3;\n}\n\nconst totalParts = chunks.length;\n\n// Retornar un item por cada chunk\nreturn chunks.map((chunk, index) => ({\n  json: {\n    phone_number: phoneNumber,\n    message_part: chunk,\n    part_number: index + 1,\n    total_parts: totalParts\n  }\n}));"
+      },
+      "id": "code-split-messages-001",
+      "name": "Split Message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.part_number }}",
+              "value2": 1,
+              "operation": "notEqual"
+            }
+          ]
+        }
+      },
+      "id": "if-not-first-message-001",
+      "name": "If Not First Message",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "amount": 5,
+        "unit": "seconds"
+      },
+      "id": "wait-5-seconds-001",
+      "name": "Wait 5 Seconds",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [900, 180],
+      "webhookId": "wait-webhook-001"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "730111076863264",
+        "recipientPhoneNumber": "={{ $json.phone_number }}",
+        "textBody": "={{ $json.message_part }}",
+        "additionalFields": {}
+      },
+      "id": "send-whatsapp-message-001",
+      "name": "Send WhatsApp Message",
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [1120, 300],
+      "credentials": {
+        "whatsAppTriggerApi": {
+          "id": "g9qQsMuIoy4pdVzE",
+          "name": "WhatsApp OAuth UTQ-BOT-V1"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When called by another workflow": {
+      "main": [[{ "node": "Split Message", "type": "main", "index": 0 }]]
+    },
+    "Split Message": {
+      "main": [[{ "node": "If Not First Message", "type": "main", "index": 0 }]]
+    },
+    "If Not First Message": {
+      "main": [
+        [{ "node": "Wait 5 Seconds", "type": "main", "index": 0 }],
+        [{ "node": "Send WhatsApp Message", "type": "main", "index": 0 }]
+      ]
+    },
+    "Wait 5 Seconds": {
+      "main": [[{ "node": "Send WhatsApp Message", "type": "main", "index": 0 }]]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2024-11-18T00:00:00.000Z",
+  "versionId": "1"
+}
