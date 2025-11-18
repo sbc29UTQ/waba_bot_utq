@@ -326,7 +326,7 @@
     },
     {
       "parameters": {
-        "inputText": "=MEMORIA_LARGA:\n{{$('code2').item.json.facts_text}}\n\nMENSAJE_ACTUAL:\n{{$('Extraer datos del user').item.json.message}}\n\nMEMORIA_CORTA:\n{{$('code3').item.json.formatted_memories}}\n\n",
+        "inputText": "=LONG-TERM MEMORY:\n{{$('code2').item.json.facts_text}}\n\nCURRENT MESSAGE:\n{{$('Extraer datos del user').item.json.message}}\n\nSHORT-TERM MEMORY:\n{{$('code3').item.json.formatted_memories}}",
         "categories": {
           "categories": [
             {
