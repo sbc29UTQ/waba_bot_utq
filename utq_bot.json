@@ -8,11 +8,11 @@
           "fieldValues": [
             {
               "fieldId": "user_name",
-              "fieldValue": "={{ $('Extraer datos del user').item.json.user_name }}"
+              "fieldValue": "={{ $('Extraer datos del user').first().json.user_name }}"
             },
             {
               "fieldId": "phone_number",
-              "fieldValue": "={{ $('Extraer datos del user').item.json.phone_number }}"
+              "fieldValue": "={{ $('Extraer datos del user').first().json.phone_number }}"
             }
           ]
         }
@@ -224,7 +224,7 @@
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"user_id\": \"{{ $('Extraer datos del user').item.json.phone_number }}\",\n  \"first_name\": \"{{ $('Extraer datos del user').item.json.user_name }}\"\n}",
+        "jsonBody": "={\n  \"user_id\": \"{{ $('Extraer datos del user').first().json.phone_number }}\",\n  \"first_name\": \"{{ $('Extraer datos del user').first().json.user_name }}\"\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -252,7 +252,7 @@
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"query\": \"{{ $('Extraer datos del user').item.json.message}}\",\n  \"user_id\":\"{{ $('Extraer datos del user').item.json.phone_number }}\",\n  \"limit\": 3,\n  \"scopes\" : \"edges\",\n    \"search_filters\":{\n  \t \"min_relevance\": 0.7\n}\n}\n",
+        "jsonBody": "={\n  \"query\": \"{{ $('Extraer datos del user').first().json.message}}\",\n  \"user_id\":\"{{ $('Extraer datos del user').first().json.phone_number }}\",\n  \"limit\": 3,\n  \"scopes\" : \"edges\",\n    \"search_filters\":{\n  \t \"min_relevance\": 0.7\n}\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -470,7 +470,7 @@
       "parameters": {
         "operation": "send",
         "phoneNumberId": "730111076863264",
-        "recipientPhoneNumber": "={{ $('Extraer datos del user').item.json.phone_number }}",
+        "recipientPhoneNumber": "={{ $('Extraer datos del user').first().json.phone_number }}",
         "textBody": "={{ $('Explore').item.json.output }}",
         "additionalFields": {}
       },
@@ -692,7 +692,7 @@
       "parameters": {
         "operation": "send",
         "phoneNumberId": "730111076863264",
-        "recipientPhoneNumber": "={{ $('Extraer datos del user').item.json.phone_number }}",
+        "recipientPhoneNumber": "={{ $('Extraer datos del user').first().json.phone_number }}",
         "textBody": "={{ $('Learn').item.json.output }}",
         "additionalFields": {}
       },
@@ -770,7 +770,7 @@
       "parameters": {
         "operation": "send",
         "phoneNumberId": "730111076863264",
-        "recipientPhoneNumber": "={{ $('Extraer datos del user').item.json.phone_number }}",
+        "recipientPhoneNumber": "={{ $('Extraer datos del user').first().json.phone_number }}",
         "textBody": "={{ $('Apply').item.json.output }}",
         "additionalFields": {}
       },
@@ -848,7 +848,7 @@
       "parameters": {
         "operation": "send",
         "phoneNumberId": "730111076863264",
-        "recipientPhoneNumber": "={{ $('Extraer datos del user').item.json.phone_number }}",
+        "recipientPhoneNumber": "={{ $('Extraer datos del user').first().json.phone_number }}",
         "textBody": "={{ $('Review').item.json.output }}",
         "additionalFields": {}
       },
@@ -926,7 +926,7 @@
       "parameters": {
         "operation": "send",
         "phoneNumberId": "730111076863264",
-        "recipientPhoneNumber": "={{ $('Extraer datos del user').item.json.phone_number }}",
+        "recipientPhoneNumber": "={{ $('Extraer datos del user').first().json.phone_number }}",
         "textBody": "={{ $('Optimize').item.json.output }}",
         "additionalFields": {}
       },
@@ -959,7 +959,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// 1. Obtener mensaje del usuario\nconst humanMessage = $('Extraer datos del user').item.json.message || \"\";\n\n// 2. Obtener mensaje generado por la IA desde el nodo \"Explore agent\"\nconst agentNode = $('Explore').item.json || {};\nconst aiMessage = agentNode.output || \"\";\n\n// 3. Devolver solo los dos items pedidos\nreturn [{\n  json: {\n    humanMessage,\n    aiMessage\n  }\n}];\n"
+        "jsCode": "// 1. Obtener mensaje del usuario\nconst humanMessage = $('Extraer datos del user').first().json.message || \"\";\n\n// 2. Obtener mensaje generado por la IA desde el nodo \"Explore agent\"\nconst agentNode = $('Explore').item.json || {};\nconst aiMessage = agentNode.output || \"\";\n\n// 3. Devolver solo los dos items pedidos\nreturn [{\n  json: {\n    humanMessage,\n    aiMessage\n  }\n}];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -977,11 +977,11 @@
           "fieldValues": [
             {
               "fieldId": "conversation_id",
-              "fieldValue": "={{ $('Extraer datos del user').item.json.phone_number }}"
+              "fieldValue": "={{ $('Extraer datos del user').first().json.phone_number }}"
             },
             {
               "fieldId": "phone_number",
-              "fieldValue": "={{ $('Extraer datos del user').item.json.phone_number }}"
+              "fieldValue": "={{ $('Extraer datos del user').first().json.phone_number }}"
             },
             {
               "fieldId": "message_ai",
@@ -1027,7 +1027,7 @@
             {
               "keyName": "conversation_id",
               "condition": "eq",
-              "keyValue": "={{ $('Extraer datos del user').item.json.phone_number}}"
+              "keyValue": "={{ $('Extraer datos del user').first().json.phone_number}}"
             }
           ]
         },
@@ -1058,7 +1058,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// 1. Obtener mensaje del usuario\nconst humanMessage = $('Extraer datos del user').item.json.message || \"\";\n\n// 2. Obtener mensaje generado por la IA desde el nodo \"Explore agent\"\nconst agentNode = $('Learn').item.json || {};\nconst aiMessage = agentNode.output || \"\";\n\n// 3. Devolver solo los dos items pedidos\nreturn [{\n  json: {\n    humanMessage,\n    aiMessage\n  }\n}];\n"
+        "jsCode": "// 1. Obtener mensaje del usuario\nconst humanMessage = $('Extraer datos del user').first().json.message || \"\";\n\n// 2. Obtener mensaje generado por la IA desde el nodo \"Explore agent\"\nconst agentNode = $('Learn').item.json || {};\nconst aiMessage = agentNode.output || \"\";\n\n// 3. Devolver solo los dos items pedidos\nreturn [{\n  json: {\n    humanMessage,\n    aiMessage\n  }\n}];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1076,11 +1076,11 @@
           "fieldValues": [
             {
               "fieldId": "conversation_id",
-              "fieldValue": "={{ $('Extraer datos del user').item.json.phone_number }}"
+              "fieldValue": "={{ $('Extraer datos del user').first().json.phone_number }}"
             },
             {
               "fieldId": "phone_number",
-              "fieldValue": "={{ $('Extraer datos del user').item.json.phone_number }}"
+              "fieldValue": "={{ $('Extraer datos del user').first().json.phone_number }}"
             },
             {
               "fieldId": "message_ai",
@@ -1118,7 +1118,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// 1. Obtener mensaje del usuario\nconst humanMessage = $('Extraer datos del user').item.json.message || \"\";\n\n// 2. Obtener mensaje generado por la IA desde el nodo \"Explore agent\"\nconst agentNode = $('Apply').item.json || {};\nconst aiMessage = agentNode.output || \"\";\n\n// 3. Devolver solo los dos items pedidos\nreturn [{\n  json: {\n    humanMessage,\n    aiMessage\n  }\n}];\n"
+        "jsCode": "// 1. Obtener mensaje del usuario\nconst humanMessage = $('Extraer datos del user').first().json.message || \"\";\n\n// 2. Obtener mensaje generado por la IA desde el nodo \"Explore agent\"\nconst agentNode = $('Apply').item.json || {};\nconst aiMessage = agentNode.output || \"\";\n\n// 3. Devolver solo los dos items pedidos\nreturn [{\n  json: {\n    humanMessage,\n    aiMessage\n  }\n}];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1136,11 +1136,11 @@
           "fieldValues": [
             {
               "fieldId": "conversation_id",
-              "fieldValue": "={{ $('Extraer datos del user').item.json.phone_number }}"
+              "fieldValue": "={{ $('Extraer datos del user').first().json.phone_number }}"
             },
             {
               "fieldId": "phone_number",
-              "fieldValue": "={{ $('Extraer datos del user').item.json.phone_number }}"
+              "fieldValue": "={{ $('Extraer datos del user').first().json.phone_number }}"
             },
             {
               "fieldId": "message_ai",
@@ -1178,7 +1178,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// 1. Obtener mensaje del usuario\nconst humanMessage = $('Extraer datos del user').item.json.message || \"\";\n\n// 2. Obtener mensaje generado por la IA desde el nodo \"Explore agent\"\nconst agentNode = $('Review').item.json || {};\nconst aiMessage = agentNode.output || \"\";\n\n// 3. Devolver solo los dos items pedidos\nreturn [{\n  json: {\n    humanMessage,\n    aiMessage\n  }\n}];\n"
+        "jsCode": "// 1. Obtener mensaje del usuario\nconst humanMessage = $('Extraer datos del user').first().json.message || \"\";\n\n// 2. Obtener mensaje generado por la IA desde el nodo \"Explore agent\"\nconst agentNode = $('Review').item.json || {};\nconst aiMessage = agentNode.output || \"\";\n\n// 3. Devolver solo los dos items pedidos\nreturn [{\n  json: {\n    humanMessage,\n    aiMessage\n  }\n}];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1196,11 +1196,11 @@
           "fieldValues": [
             {
               "fieldId": "conversation_id",
-              "fieldValue": "={{ $('Extraer datos del user').item.json.phone_number }}"
+              "fieldValue": "={{ $('Extraer datos del user').first().json.phone_number }}"
             },
             {
               "fieldId": "phone_number",
-              "fieldValue": "={{ $('Extraer datos del user').item.json.phone_number }}"
+              "fieldValue": "={{ $('Extraer datos del user').first().json.phone_number }}"
             },
             {
               "fieldId": "message_ai",
@@ -1238,7 +1238,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// 1. Obtener mensaje del usuario\nconst humanMessage = $('Extraer datos del user').item.json.message || \"\";\n\n// 2. Obtener mensaje generado por la IA desde el nodo \"Explore agent\"\nconst agentNode = $('Optimize').item.json || {};\nconst aiMessage = agentNode.output || \"\";\n\n// 3. Devolver solo los dos items pedidos\nreturn [{\n  json: {\n    humanMessage,\n    aiMessage\n  }\n}];\n"
+        "jsCode": "// 1. Obtener mensaje del usuario\nconst humanMessage = $('Extraer datos del user').first().json.message || \"\";\n\n// 2. Obtener mensaje generado por la IA desde el nodo \"Explore agent\"\nconst agentNode = $('Optimize').item.json || {};\nconst aiMessage = agentNode.output || \"\";\n\n// 3. Devolver solo los dos items pedidos\nreturn [{\n  json: {\n    humanMessage,\n    aiMessage\n  }\n}];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1256,11 +1256,11 @@
           "fieldValues": [
             {
               "fieldId": "conversation_id",
-              "fieldValue": "={{ $('Extraer datos del user').item.json.phone_number }}"
+              "fieldValue": "={{ $('Extraer datos del user').first().json.phone_number }}"
             },
             {
               "fieldId": "phone_number",
-              "fieldValue": "={{ $('Extraer datos del user').item.json.phone_number }}"
+              "fieldValue": "={{ $('Extraer datos del user').first().json.phone_number }}"
             },
             {
               "fieldId": "message_ai",
