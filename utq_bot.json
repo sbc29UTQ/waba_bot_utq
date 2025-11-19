@@ -400,7 +400,7 @@
     {
       "parameters": {
         "sessionIdType": "customKey",
-        "sessionKey": "={{ $('Extraer datos del user').first().json.id_session }}",
+        "sessionKey": "={{ $('Extraer datos del user').first().json.phone_number }}",
         "tableName": "chat_histories_uqt_bot"
       },
       "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
@@ -1566,7 +1566,7 @@
           "mode": "list",
           "cachedResultName": "models/gemini-2.5-flash"
         },
-        "text": "Describe the key points of the video content. The answer must be in Spanish.",
+        "text": "Analyze the video and extract key actions, text, or objects. Provide a concise summary. The response must be in Spanish and must not exceed 300 characters.",
         "inputType": "binary",
         "options": {}
       },
@@ -1595,7 +1595,7 @@
           "mode": "list",
           "cachedResultName": "models/gemini-2.5-flash"
         },
-        "text": "Describe the relevant points of the image content. Use a maximum of 100 words. The answer must be in Spanish.",
+        "text": "Analyze the image and extract relevant visual details or text. Provide a brief, clear summary. The response must be in Spanish and must not exceed 300 characters.",
         "inputType": "binary",
         "options": {}
       },
@@ -1623,7 +1623,7 @@
           "mode": "list",
           "cachedResultName": "models/gemini-2.5-flash"
         },
-        "text": "Give me a brief description of the document's contents. The answer must be in Spanish.",
+        "text": "Read and analyze the document, extracting essential text and key fields. Provide a concise summary. The response must be in Spanish and must not exceed 300 characters.",
         "inputType": "binary",
         "options": {}
       },
