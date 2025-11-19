@@ -63,7 +63,7 @@
             {
               "id": "aa0a5b4b-5834-4aeb-aed5-fb08132d305d",
               "name": "message",
-              "value": "={{ $json.processed_message }}",
+              "value": "={{ $json.text }}",
               "type": "string"
             },
             {
@@ -1299,167 +1299,136 @@
     {
       "parameters": {
         "rules": {
-          "rules": [
+          "values": [
             {
-              "id": "rule-text",
-              "outputKey": "text",
               "conditions": {
                 "options": {
                   "caseSensitive": true,
                   "leftValue": "",
-                  "typeValidation": "strict"
+                  "typeValidation": "strict",
+                  "version": 2
                 },
                 "conditions": [
                   {
-                    "id": "cond-text",
-                    "leftValue": "={{ $json.messages[0].type }}",
-                    "rightValue": "text",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              }
-            },
-            {
-              "id": "rule-image",
-              "outputKey": "image",
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict"
-                },
-                "conditions": [
-                  {
-                    "id": "cond-image",
-                    "leftValue": "={{ $json.messages[0].type }}",
-                    "rightValue": "image",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              }
-            },
-            {
-              "id": "rule-video",
-              "outputKey": "video",
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict"
-                },
-                "conditions": [
-                  {
-                    "id": "cond-video",
                     "leftValue": "={{ $json.messages[0].type }}",
                     "rightValue": "video",
                     "operator": {
                       "type": "string",
                       "operation": "equals"
-                    }
+                    },
+                    "id": "c17f62d7-353c-4fec-b4ea-2835d97dbd38"
                   }
                 ],
                 "combinator": "and"
-              }
+              },
+              "renameOutput": true,
+              "outputKey": "video"
             },
             {
-              "id": "rule-document",
-              "outputKey": "document",
               "conditions": {
                 "options": {
                   "caseSensitive": true,
                   "leftValue": "",
-                  "typeValidation": "strict"
+                  "typeValidation": "strict",
+                  "version": 2
                 },
                 "conditions": [
                   {
-                    "id": "cond-document",
+                    "id": "61f1ba91-2b09-4922-a92b-84d9615b5c9f",
                     "leftValue": "={{ $json.messages[0].type }}",
-                    "rightValue": "document",
+                    "rightValue": "image",
                     "operator": {
                       "type": "string",
-                      "operation": "equals"
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
                     }
                   }
                 ],
                 "combinator": "and"
-              }
+              },
+              "renameOutput": true,
+              "outputKey": "imagen"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "61145ec7-2b0a-48ab-ac54-ea4caff7268c",
+                    "leftValue": "={{ $json.messages[0].document.mime_type }}",
+                    "rightValue": "application/pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "pdf"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a3ef6e91-4e23-4459-b791-72a434b1beff",
+                    "leftValue": "={{ $json.messages[0].type }}",
+                    "rightValue": "text",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "texto"
             }
           ]
         },
-        "options": {}
+        "options": {
+          "allMatchingOutputs": true
+        }
       },
-      "id": "4c735640-a281-4c88-a328-d6dcf9cce444",
-      "name": "Clasificar Tipo Mensaje",
       "type": "n8n-nodes-base.switch",
-      "typeVersion": 3.2,
+      "typeVersion": 3.3,
       "position": [
         -6208,
-        1248
-      ]
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "d94a5851-421d-4e72-8ef2-39e2e03aaae8",
-              "name": "messages",
-              "value": "={{ $json.messages }}",
-              "type": "array"
-            },
-            {
-              "id": "e822ce32-787f-4e78-a7bf-8396043b5294",
-              "name": "contacts",
-              "value": "={{ $json.contacts }}",
-              "type": "array"
-            },
-            {
-              "id": "49bfb31f-8ee5-44bb-8b23-b1c8676b9506",
-              "name": "processed_message",
-              "value": "={{ $json.messages[0].text.body }}",
-              "type": "string"
-            },
-            {
-              "id": "06fea177-dcc6-493e-826a-dd83fdc8e713",
-              "name": "media_type",
-              "value": "text",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "df97fa3d-b6ab-45a4-9c91-b0c0d57e5a31",
-      "name": "Preparar Texto",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        -5888,
-        648
-      ]
-    },
-    {
-      "parameters": {
-        "operation": "downloadMedia",
-        "mediaId": "={{ $json.messages[0].image.id }}",
-        "additionalFields": {}
-      },
-      "id": "20f38da6-2d89-43b2-8d10-c6eac310de76",
-      "name": "WA Get Image URL",
-      "type": "n8n-nodes-base.whatsApp",
-      "typeVersion": 1.1,
-      "position": [
-        -5888,
-        1048
+        1216
       ],
+      "id": "00e86c15-6e9d-4798-834e-e86e8d7bbed6",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "resource": "media",
+        "operation": "mediaUrlGet",
+        "mediaGetId": "={{ $('WhatsApp Trigger').item.json.messages[0].video.id }}"
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        -5888,
+        1056
+      ],
+      "id": "2015d9ec-1d31-4a6b-8da0-e96df8f6e032",
+      "name": "WhatsApp Business Cloud",
+      "webhookId": "01a564ba-00b1-407c-9b0b-cd143851bd39",
       "credentials": {
         "whatsAppApi": {
           "id": "0duhem9Atjb1fCMb",
@@ -1469,7 +1438,94 @@
     },
     {
       "parameters": {
-        "method": "GET",
+        "resource": "media",
+        "operation": "mediaUrlGet",
+        "mediaGetId": "={{ $('WhatsApp Trigger').item.json.messages[0].image.id }}"
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        -5872,
+        1232
+      ],
+      "id": "10697ee6-c0a0-4247-adc3-a93f7e3bd0c1",
+      "name": "WhatsApp Business Cloud1",
+      "webhookId": "01a564ba-00b1-407c-9b0b-cd143851bd39",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "0duhem9Atjb1fCMb",
+          "name": "WhatsApp send UTQ-BOT-V1"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "media",
+        "operation": "mediaUrlGet",
+        "mediaGetId": "={{ $json.messages[0].document.id }}"
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        -5872,
+        1424
+      ],
+      "id": "dee5e98a-bac7-47f6-b472-f299c29404e4",
+      "name": "WhatsApp Business Cloud2",
+      "webhookId": "233f4695-37b7-4716-85cf-42e28369962c",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "0duhem9Atjb1fCMb",
+          "name": "WhatsApp send UTQ-BOT-V1"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "whatsAppApi",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -5648,
+        1056
+      ],
+      "id": "5b534d85-e85c-47a2-9f26-3cc9507add68",
+      "name": "HTTP Request1",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "0duhem9Atjb1fCMb",
+          "name": "WhatsApp send UTQ-BOT-V1"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "whatsAppApi",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -5648,
+        1232
+      ],
+      "id": "97e3452d-47f2-48f5-83e1-6f6c57097802",
+      "name": "HTTP Request",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "0duhem9Atjb1fCMb",
+          "name": "WhatsApp send UTQ-BOT-V1"
+        }
+      }
+    },
+    {
+      "parameters": {
         "url": "={{ $json.url }}",
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "whatsAppApi",
@@ -1481,14 +1537,14 @@
           }
         }
       },
-      "id": "c2019277-bc23-4b2b-9fea-0cfc725f94c6",
-      "name": "Download Image",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -5568,
-        1048
+        -5648,
+        1424
       ],
+      "id": "1b0b1d87-9fc4-41ac-85be-b4e35f8055cc",
+      "name": "HTTP Request2",
       "credentials": {
         "whatsAppApi": {
           "id": "0duhem9Atjb1fCMb",
@@ -1498,26 +1554,87 @@
     },
     {
       "parameters": {
+        "resource": "video",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "text": "Describe the key points of the video content. The answer must be in Spanish.",
+        "inputType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -5440,
+        1056
+      ],
+      "id": "45570130-700d-47db-ae2c-cde5f19c1928",
+      "name": "Analyze video",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "fzxSzUoNmiHkN56C",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
         "resource": "image",
         "operation": "analyze",
-        "modelId": "gpt-4o-mini",
-        "text": "={{ $('Clasificar Tipo Mensaje').item.json.messages[0].image?.caption ? 'El usuario envió esta imagen con el texto: \"' + $('Clasificar Tipo Mensaje').item.json.messages[0].image.caption + '\". Describe la imagen en español considerando el contexto del mensaje.' : 'Describe detalladamente esta imagen en español.' }}",
-        "options": {
-          "maxTokens": 500
-        }
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "text": "Describe the relevant points of the image content. Use a maximum of 100 words. The answer must be in Spanish.",
+        "inputType": "binary",
+        "options": {}
       },
-      "id": "a1e50a3f-8053-480a-9239-311258a04201",
-      "name": "OpenAI Analyze Image",
-      "type": "n8n-nodes-base.openAi",
-      "typeVersion": 1.7,
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
       "position": [
-        -5248,
-        1048
+        -5440,
+        1232
       ],
+      "id": "f9d7ec00-a8bd-4991-b024-43a4364c8930",
+      "name": "Analyze an image",
       "credentials": {
-        "openAiApi": {
-          "id": "GafxAaPv86SW96HG",
-          "name": "OpenAi account UTOPIQ"
+        "googlePalmApi": {
+          "id": "fzxSzUoNmiHkN56C",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "document",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "text": "Give me a brief description of the document's contents. The answer must be in Spanish.",
+        "inputType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -5440,
+        1424
+      ],
+      "id": "1ff9db36-59c4-4ef1-8a0e-17f20f9d6937",
+      "name": "Analyze document",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "fzxSzUoNmiHkN56C",
+          "name": "Google Gemini(PaLM) Api account"
         }
       }
     },
@@ -1526,287 +1643,46 @@
         "assignments": {
           "assignments": [
             {
-              "id": "be603512-4865-4eb4-9d2c-0094f176627c",
-              "name": "messages",
-              "value": "={{ $('Clasificar Tipo Mensaje').item.json.messages }}",
-              "type": "array"
-            },
-            {
-              "id": "0a726579-2394-4d07-a931-f20fd2d6b1ec",
-              "name": "contacts",
-              "value": "={{ $('Clasificar Tipo Mensaje').item.json.contacts }}",
-              "type": "array"
-            },
-            {
-              "id": "b22a4f3a-ce2f-4745-8fcb-4e42b109fe4b",
-              "name": "processed_message",
-              "value": "={{ $json.content.parts[0].text }}",
-              "type": "string"
-            },
-            {
-              "id": "fa5bb039-c6a5-4063-adb8-4d567b03bace",
-              "name": "media_type",
-              "value": "image",
-              "type": "string"
+              "id": "prep-text-001",
+              "name": "content",
+              "value": "={{ { parts: [{ text: $json.messages[0].text.body }] } }}",
+              "type": "object"
             }
           ]
         },
         "options": {}
       },
-      "id": "600391ba-4def-4c88-89ce-3aa17591cf2f",
-      "name": "Preparar Imagen",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -4928,
-        1048
-      ]
-    },
-    {
-      "parameters": {
-        "operation": "downloadMedia",
-        "mediaId": "={{ $json.messages[0].video.id }}",
-        "additionalFields": {}
-      },
-      "id": "4f843a57-546d-4408-9a98-626bbc440665",
-      "name": "WA Get Video URL",
-      "type": "n8n-nodes-base.whatsApp",
-      "typeVersion": 1.1,
-      "position": [
-        -5888,
-        1448
+        -5440,
+        1328
       ],
-      "credentials": {
-        "whatsAppApi": {
-          "id": "0duhem9Atjb1fCMb",
-          "name": "WhatsApp send UTQ-BOT-V1"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "method": "GET",
-        "url": "={{ $json.url }}",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "whatsAppApi",
-        "options": {
-          "response": {
-            "response": {
-              "responseFormat": "file"
-            }
-          }
-        }
-      },
-      "id": "0e39c03c-5952-4736-bcf6-5de05e169922",
-      "name": "Download Video",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -5568,
-        1448
-      ],
-      "credentials": {
-        "whatsAppApi": {
-          "id": "0duhem9Atjb1fCMb",
-          "name": "WhatsApp send UTQ-BOT-V1"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "resource": "image",
-        "operation": "analyze",
-        "modelId": "gpt-4o-mini",
-        "text": "={{ $('Clasificar Tipo Mensaje').item.json.messages[0].video?.caption ? 'El usuario envió este video con el texto: \"' + $('Clasificar Tipo Mensaje').item.json.messages[0].video.caption + '\". Describe el contenido del video en español considerando el contexto del mensaje. Analiza los frames del video para dar una descripción completa.' : 'Describe detalladamente el contenido de este video en español analizando sus frames.' }}",
-        "options": {
-          "maxTokens": 500
-        }
-      },
-      "id": "3060b761-2a02-4644-a526-42dc8cbd6cdb",
-      "name": "OpenAI Analyze Video",
-      "type": "n8n-nodes-base.openAi",
-      "typeVersion": 1.7,
-      "position": [
-        -5248,
-        1448
-      ],
-      "credentials": {
-        "openAiApi": {
-          "id": "GafxAaPv86SW96HG",
-          "name": "OpenAi account UTOPIQ"
-        }
-      }
+      "id": "prep-texto-utq-001",
+      "name": "Preparar Texto"
     },
     {
       "parameters": {
         "assignments": {
           "assignments": [
             {
-              "id": "32eb50b4-5d92-46cb-9926-53f3ff3594d2",
-              "name": "messages",
-              "value": "={{ $('Clasificar Tipo Mensaje').item.json.messages }}",
-              "type": "array"
-            },
-            {
-              "id": "f61d0014-038d-45d5-a332-bda87ca1f4d6",
-              "name": "contacts",
-              "value": "={{ $('Clasificar Tipo Mensaje').item.json.contacts }}",
-              "type": "array"
-            },
-            {
-              "id": "ac5c52b0-c7ba-41a6-98e6-c63bca7a6e50",
-              "name": "processed_message",
+              "id": "f00e1278-32dd-4638-9be7-fbe65263dd39",
+              "name": "text",
               "value": "={{ $json.content.parts[0].text }}",
-              "type": "string"
-            },
-            {
-              "id": "dd287ee7-ce02-4522-b162-a088e11f0340",
-              "name": "media_type",
-              "value": "video",
               "type": "string"
             }
           ]
         },
         "options": {}
       },
-      "id": "d3a1b02c-9472-42d3-b83b-1ebe861a151d",
-      "name": "Preparar Video",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -4928,
-        1448
-      ]
-    },
-    {
-      "parameters": {
-        "operation": "downloadMedia",
-        "mediaId": "={{ $json.messages[0].document.id }}",
-        "additionalFields": {}
-      },
-      "id": "f1f6df41-4843-4ef0-8411-5ac75f4026fd",
-      "name": "WA Get PDF URL",
-      "type": "n8n-nodes-base.whatsApp",
-      "typeVersion": 1.1,
-      "position": [
-        -5888,
-        1848
+        -5152,
+        1296
       ],
-      "credentials": {
-        "whatsAppApi": {
-          "id": "0duhem9Atjb1fCMb",
-          "name": "WhatsApp send UTQ-BOT-V1"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "method": "GET",
-        "url": "={{ $json.url }}",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "whatsAppApi",
-        "options": {
-          "response": {
-            "response": {
-              "responseFormat": "file"
-            }
-          }
-        }
-      },
-      "id": "b0cdd3cf-08f5-46ce-b1c3-eb739288cd00",
-      "name": "Download PDF",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -5568,
-        1848
-      ],
-      "credentials": {
-        "whatsAppApi": {
-          "id": "0duhem9Atjb1fCMb",
-          "name": "WhatsApp send UTQ-BOT-V1"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "resource": "image",
-        "operation": "analyze",
-        "modelId": "gpt-4o-mini",
-        "text": "={{ $('Clasificar Tipo Mensaje').item.json.messages[0].document?.caption ? 'El usuario envió este documento con el texto: \"' + $('Clasificar Tipo Mensaje').item.json.messages[0].document.caption + '\". Resume el contenido del documento en español considerando el contexto del mensaje.' : 'Resume detalladamente el contenido de este documento en español.' }}",
-        "options": {
-          "maxTokens": 500
-        }
-      },
-      "id": "02073e00-bfcb-494c-a9d9-f9fbda57f3dd",
-      "name": "OpenAI Analyze PDF",
-      "type": "n8n-nodes-base.openAi",
-      "typeVersion": 1.7,
-      "position": [
-        -5248,
-        1848
-      ],
-      "credentials": {
-        "openAiApi": {
-          "id": "GafxAaPv86SW96HG",
-          "name": "OpenAi account UTOPIQ"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "5eb4a953-eb70-48a8-bb76-f920deeb6610",
-              "name": "messages",
-              "value": "={{ $('Clasificar Tipo Mensaje').item.json.messages }}",
-              "type": "array"
-            },
-            {
-              "id": "9623fe66-757c-4f69-921f-027947d81e17",
-              "name": "contacts",
-              "value": "={{ $('Clasificar Tipo Mensaje').item.json.contacts }}",
-              "type": "array"
-            },
-            {
-              "id": "148eab6f-302a-40ea-acce-62775b502374",
-              "name": "processed_message",
-              "value": "={{ $json.content.parts[0].text }}",
-              "type": "string"
-            },
-            {
-              "id": "c97e09b5-2524-4e4a-9cb8-8fed53e5c331",
-              "name": "media_type",
-              "value": "document",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "de360275-9716-4a11-a137-446a3194a59f",
-      "name": "Preparar PDF",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        -4928,
-        1848
-      ]
-    },
-    {
-      "parameters": {
-        "mode": "combine",
-        "combineBy": "combineAll"
-      },
-      "id": "fd9c975c-b69c-4789-b157-b42097b2fdcf",
-      "name": "Merge Media Types",
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 3,
-      "position": [
-        -4608,
-        1248
-      ]
+      "id": "cca8b873-15f1-4f3b-87f4-87873594f490",
+      "name": "Edit Fields1"
     }
   ],
   "pinData": {},
@@ -1866,7 +1742,7 @@
       "main": [
         [
           {
-            "node": "Clasificar Tipo Mensaje",
+            "node": "Switch",
             "type": "main",
             "index": 0
           }
@@ -2318,32 +2194,131 @@
         ]
       ]
     },
-    "Clasificar Tipo Mensaje": {
+    "Switch": {
       "main": [
+        [
+          {
+            "node": "WhatsApp Business Cloud",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WhatsApp Business Cloud1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WhatsApp Business Cloud2",
+            "type": "main",
+            "index": 0
+          }
+        ],
         [
           {
             "node": "Preparar Texto",
             "type": "main",
             "index": 0
           }
-        ],
+        ]
+      ]
+    },
+    "WhatsApp Business Cloud": {
+      "main": [
         [
           {
-            "node": "WA Get Image URL",
+            "node": "HTTP Request1",
             "type": "main",
             "index": 0
           }
-        ],
+        ]
+      ]
+    },
+    "WhatsApp Business Cloud1": {
+      "main": [
         [
           {
-            "node": "WA Get Video URL",
+            "node": "HTTP Request",
             "type": "main",
             "index": 0
           }
-        ],
+        ]
+      ]
+    },
+    "WhatsApp Business Cloud2": {
+      "main": [
         [
           {
-            "node": "WA Get PDF URL",
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Analyze video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Analyze an image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Analyze document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze video": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze an image": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze document": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
             "type": "main",
             "index": 0
           }
@@ -2354,146 +2329,14 @@
       "main": [
         [
           {
-            "node": "Merge Media Types",
+            "node": "Edit Fields1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "WA Get Image URL": {
-      "main": [
-        [
-          {
-            "node": "Download Image",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Download Image": {
-      "main": [
-        [
-          {
-            "node": "OpenAI Analyze Image",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Gemini Analyze Image": {
-      "main": [
-        [
-          {
-            "node": "Preparar Imagen",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Preparar Imagen": {
-      "main": [
-        [
-          {
-            "node": "Merge Media Types",
-            "type": "main",
-            "index": 1
-          }
-        ]
-      ]
-    },
-    "WA Get Video URL": {
-      "main": [
-        [
-          {
-            "node": "Download Video",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Download Video": {
-      "main": [
-        [
-          {
-            "node": "OpenAI Analyze Video",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Gemini Analyze Video": {
-      "main": [
-        [
-          {
-            "node": "Preparar Video",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Preparar Video": {
-      "main": [
-        [
-          {
-            "node": "Merge Media Types",
-            "type": "main",
-            "index": 2
-          }
-        ]
-      ]
-    },
-    "WA Get PDF URL": {
-      "main": [
-        [
-          {
-            "node": "Download PDF",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Download PDF": {
-      "main": [
-        [
-          {
-            "node": "OpenAI Analyze PDF",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Gemini Analyze PDF": {
-      "main": [
-        [
-          {
-            "node": "Preparar PDF",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Preparar PDF": {
-      "main": [
-        [
-          {
-            "node": "Merge Media Types",
-            "type": "main",
-            "index": 3
-          }
-        ]
-      ]
-    },
-    "Merge Media Types": {
+    "Edit Fields1": {
       "main": [
         [
           {
