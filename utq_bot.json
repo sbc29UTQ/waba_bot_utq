@@ -326,7 +326,7 @@
     },
     {
       "parameters": {
-        "inputText": "=MEDIA TYPE: {{$('Extraer datos del user').first().json.media_type || 'text'}}\n\nUSER'S CURRENT MESSAGE:\n{{$('Extraer datos del user').first().json.message}}\n\n---\n\nRECENT CONVERSATION HISTORY (Last 5 exchanges, most recent first):\n{{$('code3').item.json.formatted_memories}}\n\n---\n\nUSER'S LONG-TERM INFORMATION:\n{{$('code2').first().json.facts_text}}",
+        "inputText": "=MEDIA TYPE: {{$('Extraer datos del user').first().json.type_message || 'text'}}\n\nUSER'S CURRENT MESSAGE:\n{{$('Extraer datos del user').first().json.message}}\n\n---\n\nRECENT CONVERSATION HISTORY (Last 5 exchanges, most recent first):\n{{$('code3').item.json.formatted_memories}}\n\n---\n\nUSER'S LONG-TERM INFORMATION:\n{{$('code2').first().json.facts_text}}",
         "categories": {
           "categories": [
             {
