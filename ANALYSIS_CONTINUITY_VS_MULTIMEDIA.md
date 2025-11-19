@@ -204,3 +204,192 @@ User sends: MEDIA TYPE: image, MESSAGE: "Diagram showing workflow steps..."
 | Usuario envía framework sin contexto previo | Cambiar a Review | Cambiar a Review | ✓ Igual |
 
 **Conclusión:** La excepción mejora el caso específico sin afectar negativamente otros casos.
+
+---
+
+## 🔄 ACTUALIZACIÓN: CICLOS ITERATIVOS (Review ↔ Apply)
+
+### Observación del Usuario:
+"El usuario puede enviar imagen de canvas completo → va a Review → Review da recomendaciones → Usuario quiere ACTUALIZAR el canvas con las recomendaciones"
+
+### Flujo Iterativo Completo:
+
+```
+1. Usuario envía canvas completo (primera vez)
+   → REVIEW (evaluación inicial) ✓
+
+2. Review: "Tu canvas está bien, pero podrías mejorar X, Y, Z"
+   
+3. Usuario: "Ayúdame a actualizar mi canvas con esas recomendaciones"
+   → ¿REVIEW o APPLY?
+   → Debería: APPLY ✓ (ayudar a implementar cambios)
+
+4. Apply ayuda a actualizar los bloques X, Y, Z
+
+5. Usuario: [envía imagen de canvas ACTUALIZADO]
+   → ¿APPLY o REVIEW?
+   → Debería: REVIEW ✓ (evaluar nueva versión)
+
+6. [Ciclo se repite hasta satisfacción]
+
+7. Usuario: "¿Qué hago ahora?"
+   → OPTIMIZE ✓ (próximos pasos)
+```
+
+---
+
+## ⚠️ NUEVOS CONFLICTOS IDENTIFICADOS
+
+### CONFLICTO #2: Review → Apply (solicitud de ayuda)
+
+```
+Review: "Podrías mejorar tu propuesta de valor y tus canales"
+Usuario: "Ayúdame a actualizar esas secciones"
+
+Regla actual: CONTINUITY RULE 1
+  - Usuario está respondiendo (implícitamente acepta hacer cambios)
+  - → Mantener REVIEW ❌
+
+Debería ser: RULE 3 - Explicit Intent Change
+  - "Ayúdame a actualizar" = solicitud de ayuda para APLICAR
+  - → Cambiar a APPLY ✓
+```
+
+**Problema:** CONTINUITY RULE 1 dice "OVERRIDE ALL OTHER RULES", pero RULE 3 dice "Explicit intent change" debería permitir cambio.
+
+### CONFLICTO #3: Apply → Review (re-evaluación)
+
+```
+Apply: "Ya actualizamos los bloques de propuesta de valor y canales"
+Usuario: "Revísalo ahora" + [envía canvas actualizado]
+
+Regla actual: CONTINUITY RULE 1
+  - Usuario respondiendo solicitud implícita
+  - → Mantener APPLY ❌
+
+Debería ser: Cambio explícito + Multimedia
+  - "Revísalo" = solicitud explícita de evaluación
+  - + Framework completo = MULTIMEDIA RULE 1
+  - → Cambiar a REVIEW ✓
+```
+
+---
+
+## 💡 SOLUCIÓN EXTENDIDA
+
+### Refinar CONTINUITY RULE 1 con detección de cambio de fase:
+
+```markdown
+### RULE 1: ANSWERING ASSISTANT'S QUESTIONS = SAME AGENT (MANDATORY)
+
+**IF** the most recent assistant message contains questions AND the current user message is answering those questions:
+→ **MUST** route to the SAME agent that asked the questions
+
+**⚠️ EXCEPTION - Explicit Phase Change in Response:**
+
+**IF** user's answer contains EXPLICIT INTENT to change workflow phase:
+→ **ALLOW AGENT SWITCH** (phase change overrides continuity)
+
+**Phase change keywords:**
+
+**Review → Apply** (request help to implement):
+- Spanish: "ayúdame a actualizar", "cómo aplico", "guíame para hacer", "paso a paso", "implementar"
+- English: "help me update", "how do I apply", "guide me to", "step by step", "implement"
+
+**Apply → Review** (request evaluation):
+- Spanish: "revísalo", "evalúa esto", "¿qué te parece?", "dame feedback"
+- English: "review this", "evaluate", "what do you think", "give me feedback"
+
+**Any → Optimize** (request next steps):
+- Spanish: "¿qué sigue?", "próximos pasos", "¿ahora qué?"
+- English: "what's next?", "next steps", "now what?"
+
+**Examples:**
+
+✅ **EXCEPTION APPLIES (Allow switch despite continuity):**
+```
+Last agent: Review
+Review: "Your canvas needs improvements. Want to work on it?"
+User: "Yes, help me update those sections step by step"
+→ **APPLY** (explicit request for guided implementation - phase change)
+```
+
+```
+Last agent: Apply
+Apply: "We've updated the value proposition. Ready to continue?"
+User: "Review it now please" + [sends updated canvas image]
+→ **REVIEW** (explicit request for evaluation - phase change)
+```
+
+❌ **EXCEPTION DOES NOT APPLY (Maintain continuity):**
+```
+Last agent: Apply
+Apply: "What customer segments do you have?"
+User: "SMEs and startups"
+→ **APPLY** (simple data provision - no phase change)
+```
+```
+
+---
+
+## 🎯 CASOS DE USO EXTENDIDOS
+
+### Tabla de Transiciones:
+
+| Desde | Hacia | Trigger | Permitir? | Razón |
+|-------|-------|---------|-----------|-------|
+| **EXPLORE** | LEARN | "Explícame el BMC" | ✅ | Cambio explícito |
+| **LEARN** | APPLY | "Ayúdame a crearlo" | ✅ | Cambio explícito |
+| **APPLY** | REVIEW | "Revísalo" + [imagen] | ✅ | Cambio explícito + multimedia |
+| **REVIEW** | APPLY | "Ayúdame a actualizar" | ✅ | **NUEVO: Cambio de fase** |
+| **APPLY** | REVIEW | [envía canvas actualizado] | ✅ | **NUEVO: Re-evaluación** |
+| **REVIEW** | REVIEW | [envía nueva versión] | ✅ | Continuidad correcta |
+| **APPLY** | APPLY | "Mis segmentos son..." | ✅ | Continuidad correcta |
+| **REVIEW** | OPTIMIZE | "¿Qué sigue?" | ✅ | Cambio explícito |
+
+---
+
+## 📋 RESUMEN DE SOLUCIÓN COMPLETA
+
+### Cambios necesarios en TextClassifier:
+
+1. **MULTIMEDIA RULE 3 - Agregar excepción:**
+   - Detectar: Pregunta sobre revisión/evaluación + Framework completo
+   - Acción: Apply → Review (progresión natural)
+
+2. **CONTINUITY RULE 1 - Agregar excepción:**
+   - Detectar: Palabras clave de cambio de fase en respuesta
+   - Acción: Permitir cambio de agente (fase > continuidad)
+   - Keywords:
+     - Review → Apply: "ayúdame a actualizar", "cómo aplico", "paso a paso"
+     - Apply → Review: "revísalo", "evalúa", "dame feedback"
+     - Any → Optimize: "¿qué sigue?", "próximos pasos"
+
+3. **Prioridad refinada:**
+   ```
+   1. Cambio de fase explícito (palabras clave) → PERMITIR CAMBIO
+   2. Multimedia + Framework completo en pregunta de revisión → PERMITIR CAMBIO
+   3. Continuidad normal → MANTENER AGENTE
+   ```
+
+### Ciclo de vida completo:
+```
+EXPLORE → LEARN → APPLY ⟷ REVIEW → OPTIMIZE
+                    ↑       ↓
+                    └───────┘
+                 (ciclo iterativo)
+```
+
+---
+
+## ✅ BENEFICIOS DE LA SOLUCIÓN EXTENDIDA
+
+1. ✅ Soporta ciclo iterativo natural (Apply ⟷ Review)
+2. ✅ Permite "Review → Apply" para implementar recomendaciones
+3. ✅ Permite "Apply → Review" para re-evaluar cambios
+4. ✅ Mantiene continuidad cuando es apropiado (provisión de datos)
+5. ✅ Detecta cambio de fase incluso dentro de respuestas
+6. ✅ Usuario no necesita decir explícitamente "cambia de agente"
+7. ✅ Flujo natural de trabajo: evaluar → mejorar → re-evaluar → repetir
+8. ✅ Transición final a Optimize cuando usuario pregunta "¿qué sigue?"
+
