@@ -1500,26 +1500,28 @@
       "parameters": {
         "resource": "image",
         "operation": "analyze",
-        "modelId": "gemini-1.5-flash",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
         "text": "={{ $('Clasificar Tipo Mensaje').item.json.messages[0].image?.caption ? 'El usuario envió esta imagen con el texto: \"' + $('Clasificar Tipo Mensaje').item.json.messages[0].image.caption + '\". Describe la imagen en español considerando el contexto del mensaje.' : 'Describe detalladamente esta imagen en español.' }}",
         "inputType": "binary",
-        "binaryPropertyName": "data",
-        "options": {
-          "simplifyOutput": true
-        }
+        "options": {}
       },
       "id": "a1e50a3f-8053-480a-9239-311258a04201",
       "name": "Gemini Analyze Image",
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
-      "typeVersion": 1.0,
+      "typeVersion": 1,
       "position": [
         -5248,
         1048
       ],
       "credentials": {
-        "googleGeminiApi": {
-          "id": "YOUR_GEMINI_CREDENTIALS_ID",
-          "name": "Google Gemini API"
+        "googlePalmApi": {
+          "id": "YOUR_GOOGLE_PALM_API_CREDENTIALS_ID",
+          "name": "Google Gemini(PaLM) Api account"
         }
       }
     },
@@ -1618,26 +1620,28 @@
       "parameters": {
         "resource": "video",
         "operation": "analyze",
-        "modelId": "gemini-1.5-flash",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
         "text": "={{ $('Clasificar Tipo Mensaje').item.json.messages[0].video?.caption ? 'El usuario envió este video con el texto: \"' + $('Clasificar Tipo Mensaje').item.json.messages[0].video.caption + '\". Describe el contenido del video en español considerando el contexto del mensaje.' : 'Describe detalladamente el contenido de este video en español.' }}",
         "inputType": "binary",
-        "binaryPropertyName": "data",
-        "options": {
-          "simplifyOutput": true
-        }
+        "options": {}
       },
       "id": "3060b761-2a02-4644-a526-42dc8cbd6cdb",
       "name": "Gemini Analyze Video",
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
-      "typeVersion": 1.0,
+      "typeVersion": 1,
       "position": [
         -5248,
         1448
       ],
       "credentials": {
-        "googleGeminiApi": {
-          "id": "YOUR_GEMINI_CREDENTIALS_ID",
-          "name": "Google Gemini API"
+        "googlePalmApi": {
+          "id": "YOUR_GOOGLE_PALM_API_CREDENTIALS_ID",
+          "name": "Google Gemini(PaLM) Api account"
         }
       }
     },
@@ -1735,27 +1739,28 @@
     {
       "parameters": {
         "resource": "document",
-        "operation": "analyze",
-        "modelId": "gemini-1.5-flash",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
         "text": "={{ $('Clasificar Tipo Mensaje').item.json.messages[0].document?.caption ? 'El usuario envió este documento con el texto: \"' + $('Clasificar Tipo Mensaje').item.json.messages[0].document.caption + '\". Resume el contenido del documento en español considerando el contexto del mensaje.' : 'Resume detalladamente el contenido de este documento en español.' }}",
         "inputType": "binary",
-        "binaryPropertyName": "data",
-        "options": {
-          "simplifyOutput": true
-        }
+        "options": {}
       },
       "id": "02073e00-bfcb-494c-a9d9-f9fbda57f3dd",
       "name": "Gemini Analyze PDF",
       "type": "@n8n/n8n-nodes-langchain.googleGemini",
-      "typeVersion": 1.0,
+      "typeVersion": 1,
       "position": [
         -5248,
         1848
       ],
       "credentials": {
-        "googleGeminiApi": {
-          "id": "YOUR_GEMINI_CREDENTIALS_ID",
-          "name": "Google Gemini API"
+        "googlePalmApi": {
+          "id": "YOUR_GOOGLE_PALM_API_CREDENTIALS_ID",
+          "name": "Google Gemini(PaLM) Api account"
         }
       }
     },
