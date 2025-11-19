@@ -39,25 +39,25 @@
             {
               "id": "2f580361-5488-4529-a913-ccca359abb74",
               "name": "id_session",
-              "value": "={{ $json.messages[0].id }}",
+              "value": "={{ $('WhatsApp Trigger').first().json.messages[0].id }}",
               "type": "string"
             },
             {
               "id": "b0fdd2cc-4044-4138-974e-5642b7f22888",
               "name": "phone_number",
-              "value": "={{ $json.messages[0].from }}",
+              "value": "={{ $('WhatsApp Trigger').first().json.messages[0].from }}",
               "type": "string"
             },
             {
               "id": "2a44b6b5-6fd6-4e7e-b83a-811b0a25f773",
               "name": "user_name",
-              "value": "={{ $json.contacts[0].profile.name }}",
+              "value": "={{ $('WhatsApp Trigger').first().json.contacts[0].profile.name }}",
               "type": "string"
             },
             {
               "id": "078cbd5a-4829-4bc6-975c-c3113e975699",
               "name": "type_message",
-              "value": "={{ $json.messages[0].type }}",
+              "value": "={{ $('WhatsApp Trigger').first().json.messages[0].type }}",
               "type": "string"
             },
             {
@@ -69,7 +69,7 @@
             {
               "id": "e4568b7b-ad08-4308-bd1f-dd49872ae5cd",
               "name": "attachments",
-              "value": "={{ $json.messages[0] }}",
+              "value": "={{ $('WhatsApp Trigger').first().json.messages[0] }}",
               "type": "object"
             }
           ]
